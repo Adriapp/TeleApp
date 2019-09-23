@@ -184,6 +184,17 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function unbanChatMember($chat_id,$user_id){
+    $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$chat_id&user_id=$user_id";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
   public function kickChatMember($chat_id,$user_id,$until_date = false){
     if($until_date == false){
       $until_date = 0;
