@@ -177,6 +177,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$user_id&message_id=$message_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -188,6 +189,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$chat_id&user_id=$user_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -202,6 +204,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/kickChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -213,6 +216,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/setChatTitle?chat_id=$user_id&title=$title";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -224,6 +228,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendChatAction?chat_id=$user_id&action=$action";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -235,6 +240,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/forwardMessage?from_chat_id=$from_chat_id&chat_id=$user_id&message_id=$message_id";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -274,6 +280,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&parse_mode=HTML&disable_web_page_preview=true&text=" . urlencode($text) . $rm . $risposta . $forceReply . $notifica;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -285,6 +292,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendSticker?chat_id=$user_id&sticker=$sticker";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -296,6 +304,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=$photo";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -307,6 +316,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -318,6 +328,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -329,6 +340,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendMediaGroup?chat_id=$user_id&media=$album";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -358,6 +370,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -369,6 +382,7 @@ class Bot {
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
   curl_setopt($ch, CURLOPT_URL, $url);
   $output = curl_exec($ch);
@@ -380,6 +394,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/answerCallbackQuery?callback_query_id=$callback_query_id&show_alert=$show_alert&text=".urlencode($text);
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -400,6 +415,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/editMessageText?chat_id=$user_id&message_id=$message_id&disable_web_page_preview=true&parse_mode=HTML&text=".urlencode($newText) . $rm;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -411,6 +427,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/leaveChat?chat_id=$chat_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -422,6 +439,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/pinChatMessage?chat_id=$chat_id&message_id=$message_id&disable_notification=$disable_notification";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -433,6 +451,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChat?chat_id=$chat_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -444,6 +463,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatAdministrators?chat_id=$chat_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -455,6 +475,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMembersCount?chat_id=$chat_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
@@ -466,6 +487,7 @@ class Bot {
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMember?chat_id=$chat_id&user_id=$user_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
     curl_setopt($ch, CURLOPT_URL, $url);
     $output = curl_exec($ch);
