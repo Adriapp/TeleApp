@@ -58,6 +58,11 @@ class Bot {
         $this->sticker = $this->update['message']['sticker']['file_id'];
         $this->size_sticker = $this->update['message']['sticker']['file_size'];
       }
+      if(isset($this->update['message']['new_chat_participant'])){ //Se c'è un nuovo partecipante alla chat
+        $this->nuovo_membro = $this->update['message']['new_chat_member']; //Nuovo membro
+        $this->nuovo_partecipante = $this->update['message']['new_chat_participant']; //Nuovo partecipante
+        $this->nuovi_membri = $this->update['message']['new_chat_members']; //Array dei nuovi partecipanti
+      }
       if(isset($this->update['message']['photo'])){ //Se è una foto
         $this->didascalia = $this->update['message']['caption']; //Didascalia foto
         $this->foto = $this->update['message']['photo']['2']['file_id']; //File_id della foto inviata
