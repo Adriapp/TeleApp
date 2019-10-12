@@ -538,6 +538,24 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function getWebhookInfo($token = false){
+
+    if($token == false){
+      $url = 'https://api.telegram.org/bot'.$this->bot.'/getWebhookInfo';
+    } else {
+      $url = 'https://api.telegram.org/bot'.$token.'/getWebhookInfo';
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
   public function getChatAdministrators($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatAdministrators?chat_id=$chat_id";
     $ch = curl_init();
