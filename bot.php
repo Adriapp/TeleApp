@@ -305,7 +305,14 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendPhoto($user_id,$photo){
+  public function sendPhoto($user_id,$photo,$caption = false){
+
+  if($caption == false){
+    $caption = '';
+  } else {
+      $caption = '&caption='.urlencode($caption);
+  }
+
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=$photo";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -317,8 +324,16 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendAudio($user_id,$audio){
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio);
+  public function sendAudio($user_id,$audio,$caption = false){
+
+  if($caption == false){
+    $caption = '';
+  } else {
+    $caption = '&caption='.urlencode($caption);
+  }
+
+
+  $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio).$caption;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
@@ -329,8 +344,15 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendVideo($user_id,$video){
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video";
+  public function sendVideo($user_id,$video,$caption = false){
+
+  if($caption == false){
+    $caption = '';
+  } else {
+    $caption = '&caption='.urlencode($caption);
+  }
+
+  $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video".$caption;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
@@ -341,8 +363,15 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendMediaGroup($user_id,$album){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMediaGroup?chat_id=$user_id&media=$album";
+  public function sendMediaGroup($user_id,$album,$caption = false){
+
+      if($caption == false){
+        $caption = '';
+      } else {
+        $caption = '&caption='.urlencode($caption);
+      }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMediaGroup?chat_id=$user_id&media=$album".$caption;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
@@ -353,15 +382,32 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
-  public function sendDocument($user_id, $document){
-  global $botToken;
-  $document = new CURLFile($document);
-  $args = [
-  'chat_id' => $user_id,
-  'document' => $document
-  ];
+  public function sendDocument($user_id, $document, $file_id = true, $caption = false){
+
+  if($caption == false){
+    $caption = '';
+  } else {
+    $caption = '&caption='.urlencode($caption);
+  }
+
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+
+  if($file_id == true){
+    $args = [
+    'chat_id' => $user_id,
+    'document' => $document,
+    'caption' => $caption
+    ];
+  } else {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+    $document = new CURLFile($document);
+    $args = [
+    'chat_id' => $user_id,
+    'document' => $document,
+    'caption' => $caption
+    ];
+  }
+
   curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendDocument');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_POST, true);
@@ -371,7 +417,14 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendVoice($user_id,$voice){
+  public function sendVoice($user_id,$voice,$caption = false){
+
+  if($caption == false){
+    $caption = '';
+  } else {
+    $caption = '&caption='.urlencode($caption);
+  }
+
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -383,7 +436,14 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendAnimation($user_id,$animation){
+  public function sendAnimation($user_id,$animation,$caption = false){
+
+    if($caption == false){
+      $caption = '';
+    } else {
+        $caption = '&caption='.urlencode($caption);
+    }
+
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -396,7 +456,14 @@ class Bot {
   }
 
   public function answerCallbackQuery($callback_query_id,$text,$show_alert = true){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/answerCallbackQuery?callback_query_id=$callback_query_id&show_alert=$show_alert&text=".urlencode($text);
+
+    if($show_alert == true){
+      $show_alert = '&show_alert=true';
+    } else {
+      $show_alert = '&show_alert=false';
+    }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/answerCallbackQuery?callback_query_id=$callback_query_id&text=".urlencode($text).$show_alert;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
@@ -441,6 +508,13 @@ class Bot {
   }
 
   public function pinChatMessage($chat_id,$message_id,$disable_notification = false){
+
+    if($disable_notification == false){
+      $disable_notification = '&disable_notification=false';
+    } else {
+      $disable_notification = '&disable_notification=true';
+    }
+
     $url = 'https://api.telegram.org/bot'.$this->bot."/pinChatMessage?chat_id=$chat_id&message_id=$message_id&disable_notification=$disable_notification";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
