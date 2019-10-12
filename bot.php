@@ -538,6 +538,52 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function deleteWebhook($token = false){
+
+    if($token == false){
+      $url = 'https://api.telegram.org/bot'.$this->bot.'/deleteWebhook';
+    } else {
+      $url = 'https://api.telegram.org/bot'.$token.'/deleteWebhook';
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
+  public function setWebhook($token = false, $url = false, $max_connections = false){
+
+    if($max_connections == false){
+      $max_connections = '&max_connections=40';
+    } else {
+      $max_connections = '&max_connections='.$max_connections;
+    }
+
+    if($url == false){
+      $url = '';
+    }
+
+    if($token == false){
+      $url = 'https://api.telegram.org/bot'.$this->bot.'/setWebhook?url='.$url.$max_connections;
+    } else {
+      $url = 'https://api.telegram.org/bot'.$token.'/setWebhook?url='.$url.$max_connections;
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
   public function getWebhookInfo($token = false){
 
     if($token == false){
