@@ -305,7 +305,17 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendPhoto($user_id,$photo,$caption = false){
+  public function sendPhoto($user_id,$photo,$caption = false, $keyboard = false, $type = false){
+
+    if ($keyboard != false) {
+        if ($type == 'fisica') {
+            $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+        } else if($type == 'inline'){
+            $rm = '&reply_markup={"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+        }
+    } else {
+      $rm = '';
+    }
 
   if($caption == false){
     $caption = '';
@@ -313,7 +323,7 @@ class Bot {
       $caption = '&caption='.urlencode($caption);
   }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=$photo";
+  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=$photo".$rm;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
