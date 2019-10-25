@@ -199,6 +199,53 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function restrictChatMember($chat_id,$user_id,$perms = false, $until_date = false){
+
+    if($until_date == false){
+      $until_date = 0;
+    }
+
+    if($perms != false){
+    $permessi = '&permissions='.http_build_query($perms);
+    } else {
+    $permessi = '';
+    }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/restrictChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date".$permessi;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
+  public function promoteChatMember($chat_id,$user_id,$perms = false){
+
+    if($until_date == false){
+      $until_date = 0;
+    }
+
+
+    if($perms != false){
+    $permessi = '&permissions='.http_build_query($perms);
+    } else {
+    $permessi = '';
+    }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
   public function unbanChatMember($chat_id,$user_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$chat_id&user_id=$user_id";
     $ch = curl_init();
