@@ -60,6 +60,15 @@ class Bot {
       }
       if(isset($this->update['message']['new_chat_participant'])){ //Se c'è un nuovo partecipante alla chat
         $this->nuovo_membro = $this->update['message']['new_chat_member']; //Nuovo membro
+        $this->nuovo_membro_id = $this->update['message']['new_chat_member']['id']; //Nuovo membro
+        $this->nuovo_membro_nome = $this->update['message']['new_chat_member']['first_name']; //Nuovo membro
+        if(isset($this->update['message']['new_chat_member']['last_name'])){
+          $this->nuovo_membro_cognome = $this->update['message']['new_chat_member']['last_name']; //Nuovo membro
+        }
+        if(isset($this->update['message']['new_chat_member']['username'])){
+          $this->nuovo_membro_username = $this->update['message']['new_chat_member']['username']; //Nuovo membro
+        }
+        $this->nuovo_membro_is_bot = $this->update['message']['new_chat_member']['is_bot']; //Nuovo membro
         $this->nuovo_partecipante = $this->update['message']['new_chat_participant']; //Nuovo partecipante
         $this->nuovi_membri = $this->update['message']['new_chat_members']; //Array dei nuovi partecipanti
       }
