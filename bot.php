@@ -105,7 +105,7 @@ class Bot {
         $this->didascalia = $this->update['channel_post']['caption']; //Didascalia foto
         $this->testo_canale = $this->update['channel_post']['text'];
       }
-      $this->entities = $this->update['message']['entities']; //Entities del messaggio 
+      $this->entities = $this->update['message']['entities']; //Entities del messaggio
       $this->update_id = $this->update['update_id']; //ID dell'update
       $this->message_id = $this->update['message']['message_id']; //Message_id del messaggio
       $this->user_id = $this->update['message']['from']['id']; //ID dell'utente
@@ -237,6 +237,18 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
+  public function exportChatInviteLink($chat_id){
+    $url = 'https://api.telegram.org/bot'.$this->bot."/exportChatInviteLink?chat_id=$chat_id";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
