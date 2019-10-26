@@ -105,6 +105,7 @@ class Bot {
         $this->didascalia = $this->update['channel_post']['caption']; //Didascalia foto
         $this->testo_canale = $this->update['channel_post']['text'];
       }
+      $this->entities = $this->update['message']['entities']; //Entities del messaggio 
       $this->update_id = $this->update['update_id']; //ID dell'update
       $this->message_id = $this->update['message']['message_id']; //Message_id del messaggio
       $this->user_id = $this->update['message']['from']['id']; //ID dell'utente
