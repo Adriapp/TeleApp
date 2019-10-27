@@ -717,6 +717,57 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function gestisciInlineQuery($inlineData,$switchText = false,$switchParameter = false, $cacheTime = false){
+
+             if($switchText == false){
+               $switchText = 'Ritorna al bot';
+             }
+
+             if($switchParameter == false){
+               $switchParameter = 123;
+             }
+
+             if($cacheTime == false){
+               $cacheTime = 0;
+             }
+
+             $risultati = json_encode($inlineData,true);
+             $url = 'https://api.telegram.org/bot'.$this->bot."/answerInlineQuery?inline_query_id=$this->inline_id&results=$risultati&cache_time=$cacheTime&switch_pm_text=$switchText&switch_pm_parameter=$switchParameter";
+             $ch = curl_init();
+             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+             curl_setopt($ch, CURLOPT_URL, $url);
+             $result = curl_exec($ch);
+             curl_close($ch);
+             return json_decode($result);
+
+             # ESEMPIO DI OGGETTO INLINE
+
+             /*
+             $inlineData=[[
+                 "type" => "article",
+                 "id" => "0 (sarà il primo risultato, se fosse stato 2 appariva dopo l'1 e lo 0, e così via)",
+                 "title" => "Titolo qua",
+                 "input_message_content" => array("message_text" => "Quello che ti pare", "parse_mode" => "HTML (o altro)"),
+                 "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE","url (o callback_data)" => "URL o Callback data")]]),
+                 "description" => "Qua la tua descrizione"
+              ],
+              [
+                  "type" => "article",
+                  "id" => "1",
+                  "title" => "Titolo qua 2",
+                  "input_message_content" => array("message_text" => "Quello che ti pare 2", "parse_mode" => "HTML (o altro)"),
+                  "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE 2","url (o callback_data)" => "URL o Callback data")]]),
+                  "description" => "Qua la tua descrizione 2"
+               ]
+               ];
+
+              */
+
+
+  }
+
 } //Fine della classe
 
 ?>
