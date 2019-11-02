@@ -374,7 +374,7 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false, $tipoFoto = false){
+  public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -392,13 +392,7 @@ class Bot {
       $caption = '&caption='.urlencode($caption);
   }
 
-  if($tipoFoto == false){
-    $foto = '&photo='.$photo;
-  } else {
-    $foto = '&url='.$photo;
-  }
-
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id".$foto.$rm;
+  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=".$photo.$rm;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
