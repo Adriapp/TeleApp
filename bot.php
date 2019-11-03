@@ -392,21 +392,25 @@ class Bot {
       $caption = '&caption='.urlencode($caption);
   }
 
+  $ch = curl_init();
+
   if($file_id == true){
     $args = [
     'chat_id' => $user_id,
     'photo' => $photo,
     'caption' => $caption,
-    'reply_markup' => $rm
+    'reply_markup' => $rm,
+    'parse_mode' => 'HTML'
     ];
   } else {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
-    $photo = new CURLFile($photo);
+    $photoFile = new CURLFile($photo);
     $args = [
     'chat_id' => $user_id,
-    'photo' => $photo,
+    'photo' => $photoFile,
     'caption' => $caption,
-    'reply_markup' => $rm
+    'reply_markup' => $rm,
+    'parse_mode' => 'HTML'
     ];
   }
   curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendPhoto');
