@@ -374,7 +374,7 @@ class Bot {
   return json_decode($output, TRUE);
   }
 
-  public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false){
+  public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false, $file_id = true){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -392,12 +392,27 @@ class Bot {
       $caption = '&caption='.urlencode($caption);
   }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=".$photo.$caption.$rm;
-  $ch = curl_init();
+  if($file_id == true){
+    $args = [
+    'chat_id' => $user_id,
+    'photo' => $photo,
+    'caption' => $caption,
+    'reply_markup' => $rm;
+    ];
+  } else {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+    $photo = new CURLFile($photo);
+    $args = [
+    'chat_id' => $user_id,
+    'photo' => $photo,
+    'caption' => $caption,
+    'reply_markup' => $rm;
+    ];
+  }
+  curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendPhoto');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
   $output = curl_exec($ch);
   curl_close($ch);
   return json_decode($output, TRUE);
