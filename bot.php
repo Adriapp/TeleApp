@@ -396,9 +396,9 @@ class Bot {
 
   if($file_id == true){
     $args = [
+    'caption' => $caption,
     'chat_id' => $user_id,
     'photo' => $photo,
-    'caption' => $caption,
     'reply_markup' => $rm,
     'parse_mode' => 'HTML'
     ];
@@ -406,9 +406,9 @@ class Bot {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
     $photoFile = new CURLFile($photo);
     $args = [
+    'caption' => $caption,
     'chat_id' => $user_id,
     'photo' => $photoFile,
-    'caption' => $caption,
     'reply_markup' => $rm,
     'parse_mode' => 'HTML'
     ];
