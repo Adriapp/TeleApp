@@ -389,7 +389,7 @@ class Bot {
   if($caption == false){
     $caption = '';
   } else {
-      $caption = '&caption='.urlencode($caption);
+      $caption = '&caption='.$caption;
   }
 
   $ch = curl_init();
