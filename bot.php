@@ -392,7 +392,7 @@ class Bot {
       $caption = '&caption='.urlencode($caption);
   }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=".$photo.$rm;
+  $url = 'https://api.telegram.org/bot'.$this->bot."/sendPhoto?chat_id=$user_id&photo=".$photo.$caption.$rm;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
