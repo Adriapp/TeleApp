@@ -397,7 +397,7 @@ class Bot {
     'chat_id' => $user_id,
     'photo' => $photo,
     'caption' => $caption,
-    'reply_markup' => $rm;
+    'reply_markup' => $rm
     ];
   } else {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
@@ -406,7 +406,7 @@ class Bot {
     'chat_id' => $user_id,
     'photo' => $photo,
     'caption' => $caption,
-    'reply_markup' => $rm;
+    'reply_markup' => $rm
     ];
   }
   curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendPhoto');
