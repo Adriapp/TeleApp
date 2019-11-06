@@ -298,6 +298,25 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
+  public function setChatDescription($chat_id,$description = false){
+
+    if($description == false){
+      $description = '';
+    } else {
+      $description = '&description='.$description;
+    }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/setChatDescription?chat_id=$chat_id".$description;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+  }
+
   public function sendChatAction($user_id,$action){
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendChatAction?chat_id=$user_id&action=$action";
     $ch = curl_init();
