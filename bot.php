@@ -188,8 +188,7 @@ class Bot {
 
   #FUNZIONI
 
-  public function deleteMessage($user_id,$message_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$user_id&message_id=$message_id";
+  public function cURL($url){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
@@ -198,6 +197,11 @@ class Bot {
     $output = curl_exec($ch);
     curl_close($ch);
     return json_decode($output, TRUE);
+  }
+
+  public function deleteMessage($user_id,$message_id){
+    $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$user_id&message_id=$message_id";
+    return $this->cURL($url);
   }
 
   public function restrictChatMember($chat_id,$user_id,$perms = false, $until_date = false){
@@ -213,14 +217,7 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/restrictChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date".$permessi;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function promoteChatMember($chat_id,$user_id,$perms = false){
@@ -237,38 +234,17 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function exportChatInviteLink($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/exportChatInviteLink?chat_id=$chat_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function unbanChatMember($chat_id,$user_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$chat_id&user_id=$user_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function kickChatMember($chat_id,$user_id,$until_date = false){
@@ -276,26 +252,12 @@ class Bot {
       $until_date = 0;
     }
     $url = 'https://api.telegram.org/bot'.$this->bot."/kickChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function setChatTitle($user_id,$title){
     $url = 'https://api.telegram.org/bot'.$this->bot."/setChatTitle?chat_id=$user_id&title=$title";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function setChatDescription($chat_id,$description = false){
@@ -307,38 +269,17 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/setChatDescription?chat_id=$chat_id".$description;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function sendChatAction($user_id,$action){
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendChatAction?chat_id=$user_id&action=$action";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function forwardMessage($from_chat_id,$user_id,$message_id){
   $url = 'https://api.telegram.org/bot'.$this->bot."/forwardMessage?from_chat_id=$from_chat_id&chat_id=$user_id&message_id=$message_id";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false){
@@ -371,26 +312,12 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&parse_mode=HTML&disable_web_page_preview=true&text=" . urlencode($text) . $rm . $risposta . $forceReply . $notifica;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function sendSticker($user_id,$sticker){
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendSticker?chat_id=$user_id&sticker=$sticker";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false, $file_id = true){
@@ -451,14 +378,7 @@ class Bot {
 
 
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio).$caption;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function sendVideo($user_id,$video,$caption = false){
@@ -470,14 +390,7 @@ class Bot {
   }
 
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video".$caption;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function sendMediaGroup($user_id,$album,$caption = false){
@@ -489,14 +402,7 @@ class Bot {
       }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/sendMediaGroup?chat_id=$user_id&media=$album".$caption;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function sendDocument($user_id, $document, $file_id = true, $caption = false){
@@ -543,14 +449,7 @@ class Bot {
   }
 
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function sendAnimation($user_id,$animation,$caption = false){
@@ -562,14 +461,7 @@ class Bot {
     }
 
   $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+  return $this->cURL($url);
   }
 
   public function answerCallbackQuery($callback_query_id,$text,$show_alert = true){
@@ -581,14 +473,7 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/answerCallbackQuery?callback_query_id=$callback_query_id&text=".urlencode($text).$show_alert;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function editMessageText($user_id, $message_id, $newText, $keyboard = false, $type = false){
@@ -602,26 +487,12 @@ class Bot {
       $rm = '';
     }
     $url = 'https://api.telegram.org/bot'.$this->bot."/editMessageText?chat_id=$user_id&message_id=$message_id&disable_web_page_preview=true&parse_mode=HTML&text=".urlencode($newText) . $rm;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function leaveChat($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/leaveChat?chat_id=$chat_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function pinChatMessage($chat_id,$message_id,$disable_notification = false){
@@ -633,26 +504,12 @@ class Bot {
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/pinChatMessage?chat_id=$chat_id&message_id=$message_id&disable_notification=$disable_notification";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function getChat($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChat?chat_id=$chat_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function deleteWebhook($token = false){
@@ -663,14 +520,7 @@ class Bot {
       $url = 'https://api.telegram.org/bot'.$token.'/deleteWebhook';
     }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function setWebhook($token = false, $url = false, $max_connections = false){
@@ -691,14 +541,7 @@ class Bot {
       $url = 'https://api.telegram.org/bot'.$token.'/setWebhook?url='.$url.$max_connections;
     }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function getWebhookInfo($token = false){
@@ -709,50 +552,22 @@ class Bot {
       $url = 'https://api.telegram.org/bot'.$token.'/getWebhookInfo';
     }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function getChatAdministrators($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatAdministrators?chat_id=$chat_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function getChatMembersCount($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMembersCount?chat_id=$chat_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function getChatMember($chat_id, $user_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMember?chat_id=$chat_id&user_id=$user_id";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+    return $this->cURL($url);
   }
 
   public function gestisciInlineQuery($inlineData,$switchText = false,$switchParameter = false, $cacheTime = false){
@@ -771,14 +586,7 @@ class Bot {
 
              $risultati = json_encode($inlineData,true);
              $url = 'https://api.telegram.org/bot'.$this->bot."/answerInlineQuery?inline_query_id=$this->inline_id&results=$risultati&cache_time=$cacheTime&switch_pm_text=$switchText&switch_pm_parameter=$switchParameter";
-             $ch = curl_init();
-             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-             curl_setopt($ch, CURLOPT_URL, $url);
-             $result = curl_exec($ch);
-             curl_close($ch);
-             return json_decode($result);
+             return $this->cURL($url);
 
              # ESEMPIO DI OGGETTO INLINE
 
