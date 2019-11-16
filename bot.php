@@ -4,17 +4,31 @@
 
 # Copyright Adriano Palma
 
-$Adriano = 588347428; //Mio ID
+$Adriano = 588347428;
 
 class Bot {
 
-  public function __construct($token){
+  public function __construct($token,$json = false){
+
+    if($json == false){
+      $this->json = file_get_contents('php://input');
+    }
 
     $this->bot = $token;
 
     #Variabili
 
-    $this->update = json_decode(file_get_contents('php://input'), TRUE);
+    $this->update = json_decode($this->json, TRUE);
+
+    if($this->update != null){
+
+    if(isset($this->update['message'])){
+    $this->edit = false;
+    $this->messageType = 'message';
+    } else if(isset($this->update['edited_message'])){
+    $this->edit = true;
+    $this->messageType = 'edited_message';
+    }
 
     if(isset($this->update['callback_query']['id'])){ //Se l'update è un callback_query
       if(isset($this->update['callback_query']['from']['last_name'])){
@@ -40,64 +54,64 @@ class Bot {
       $this->callback_inline_keyboard = $this->update['callback_query']['message']['reply_markup']['inline_keyboard']; //Array della tastiera del messaggio a cui l'utente ha cliccato
       $this->callback_chat_instance = $this->update['callback_query']['chat_instance']; //istanza chat
       $this->callback_data = $this->update['callback_query']['data']; //callback_data
-    } else if(isset($this->update['message']['message_id'])){ //Se l'update è un messaggio
-      if(isset($this->update['message']['chat']['first_name'])){ //Se il tipochat è private
-        $this->nome_chat = $this->update['message']['chat']['first_name'];
-        if(isset($this->update['message']['from']['last_name'])){
-        $this->cognome = $this->update['message']['from']['last_name']; //cognome dell'utente
+    } else if(isset($this->update[$this->messageType]['message_id'])){ //Se l'update è un messaggio
+      if(isset($this->update[$this->messageType]['chat']['first_name'])){ //Se il tipochat è private
+        $this->nome_chat = $this->update[$this->messageType]['chat']['first_name'];
+        if(isset($this->update[$this->messageType]['from']['last_name'])){
+        $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
         } else {
-        $this->nome_chat = $this->update['message']['chat']['title']; //titolo chat
+        $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
       }
     }
-      if(isset($this->update['message']['sticker'])){ #Se è uno sticker
-        $this->is_animated = $this->update['message']['sticker']['is_animated']; //Se è animato [true/false]
-        $this->width_sticker = $this->update['message']['sticker']['width'];
-        $this->height_sticker = $this->update['message']['sticker']['height'];
-        $this->emoji_sticker = $this->update['message']['sticker']['emoji'];
-        $this->nome_sticker = $this->update['message']['sticker']['set_name'];
-        $this->sticker = $this->update['message']['sticker']['file_id'];
-        $this->size_sticker = $this->update['message']['sticker']['file_size'];
+      if(isset($this->update[$this->messageType]['sticker'])){ #Se è uno sticker
+        $this->is_animated = $this->update[$this->messageType]['sticker']['is_animated']; //Se è animato [true/false]
+        $this->width_sticker = $this->update[$this->messageType]['sticker']['width'];
+        $this->height_sticker = $this->update[$this->messageType]['sticker']['height'];
+        $this->emoji_sticker = $this->update[$this->messageType]['sticker']['emoji'];
+        $this->nome_sticker = $this->update[$this->messageType]['sticker']['set_name'];
+        $this->sticker = $this->update[$this->messageType]['sticker']['file_id'];
+        $this->size_sticker = $this->update[$this->messageType]['sticker']['file_size'];
       }
-      if(isset($this->update['message']['new_chat_participant'])){ //Se c'è un nuovo partecipante alla chat
-        $this->nuovo_membro = $this->update['message']['new_chat_member']; //Nuovo membro
-        $this->nuovo_membro_id = $this->update['message']['new_chat_member']['id']; //Nuovo membro
+      if(isset($this->update[$this->messageType]['new_chat_participant'])){ //Se c'è un nuovo partecipante alla chat
+        $this->nuovo_membro = $this->update[$this->messageType]['new_chat_member']; //Nuovo membro
+        $this->nuovo_membro_id = $this->update[$this->messageType]['new_chat_member']['id']; //Nuovo membro
         $this->nuovo_membro_nome = $this->update['message']['new_chat_member']['first_name']; //Nuovo membro
-        if(isset($this->update['message']['new_chat_member']['last_name'])){
-          $this->nuovo_membro_cognome = $this->update['message']['new_chat_member']['last_name']; //Nuovo membro
+        if(isset($this->update[$this->messageType]['new_chat_member']['last_name'])){
+          $this->nuovo_membro_cognome = $this->update[$this->messageType]['new_chat_member']['last_name']; //Nuovo membro
         }
-        if(isset($this->update['message']['new_chat_member']['username'])){
-          $this->nuovo_membro_username = $this->update['message']['new_chat_member']['username']; //Nuovo membro
+        if(isset($this->update[$this->messageType]['new_chat_member']['username'])){
+          $this->nuovo_membro_username = $this->update[$this->messageType]['new_chat_member']['username']; //Nuovo membro
         }
-        $this->nuovo_membro_is_bot = $this->update['message']['new_chat_member']['is_bot']; //Nuovo membro
-        $this->nuovo_partecipante = $this->update['message']['new_chat_participant']; //Nuovo partecipante
-        $this->nuovi_membri = $this->update['message']['new_chat_members']; //Array dei nuovi partecipanti
+        $this->nuovo_membro_is_bot = $this->update[$this->messageType]['new_chat_member']['is_bot']; //Nuovo membro
+        $this->nuovo_partecipante = $this->update[$this->messageType]['new_chat_participant']; //Nuovo partecipante
+        $this->nuovi_membri = $this->update[$this->messageType]['new_chat_members']; //Array dei nuovi partecipanti
       }
-      if(isset($this->update['message']['photo'])){ //Se è una foto
-        $this->didascalia = $this->update['message']['caption']; //Didascalia foto
-        $this->foto = $this->update['message']['photo']['2']['file_id']; //File_id della foto inviata
+      if(isset($this->update[$this->messageType]['photo'])){ //Se è una foto
+        $this->didascalia = $this->update[$this->messageType]['caption']; //Didascalia foto
+        $this->foto = $this->update[$this->messageType]['photo']['2']['file_id']; //File_id della foto inviata
       }
-      if(isset($this->update['message']['document'])){ //Se è un file/documento
-        $this->nome_file = $this->update['message']['document']['file_name']; //Nome del file
-        $this->tipo_file = $this->update['message']['document']['mime_type']; //Estensione del file
-        $this->file = $this->update['message']['document']['file_id']; //file_id del file
-        $this->tipo_file = $this->update['message']['document']['mime_type']; //Estensione del file
-        $this->size_file = $this->update['message']['document']['file_size']; //Peso del file in byte
+      if(isset($this->update[$this->messageType]['document'])){ //Se è un file/documento
+        $this->nome_file = $this->update[$this->messageType]['document']['file_name']; //Nome del file
+        $this->tipo_file = $this->update[$this->messageType]['document']['mime_type']; //Estensione del file
+        $this->file = $this->update[$this->messageType]['document']['file_id']; //file_id del file
+        $this->tipo_file = $this->update[$this->messageType]['document']['mime_type']; //Estensione del file
+        $this->size_file = $this->update[$this->messageType]['document']['file_size']; //Peso del file in byte
       }
-      if(isset($this->update['message']['video'])){ //Se è un video
-        $this->durata_video = $this->update['message']['video']['duration']; //Durata video
-        $this->video = $this->update['message']['video']['file_id']; //File_id del video
-        $this->tipo_video = $this->update['message']['video']['mime_type']; //Estensione del video
-        $this->width_video = $this->update['message']['video']['width'];
-        $this->size_video = $this->update['message']['video']['file_size'];
-        $this->height_video = $this->update['message']['video']['height'];
+      if(isset($this->update[$this->messageType]['video'])){ //Se è un video
+        $this->durata_video = $this->update[$this->messageType]['video']['duration']; //Durata video
+        $this->video = $this->update[$this->messageType]['video']['file_id']; //File_id del video
+        $this->tipo_video = $this->update[$this->messageType]['video']['mime_type']; //Estensione del video
+        $this->width_video = $this->update[$this->messageType]['video']['width'];
+        $this->size_video = $this->update[$this->messageType]['video']['file_size'];
+        $this->height_video = $this->update[$this->messageType]['video']['height'];
       }
-      if(isset($this->update['message']['animation'])){ //Se è una gif
-        $this->durata_gif = $this->update['message']['animation']['duration']; //Durata video
-        $this->gif = $this->update['message']['animation']['file_id']; //File_id del video
-        $this->tipo_gif = $this->update['message']['animation']['mime_type']; //Estensione del video
-        $this->width_gif = $this->update['message']['animation']['width'];
-        $this->size_gif = $this->update['message']['animation']['file_size'];
-        $this->height_gif = $this->update['message']['animation']['height'];
+      if(isset($this->update[$this->messageType]['animation'])){ //Se è una gif
+        $this->durata_gif = $this->update[$this->messageType]['animation']['duration']; //Durata video
+        $this->gif = $this->update[$this->messageType]['animation']['file_id']; //File_id del video
+        $this->tipo_gif = $this->update[$this->messageType]['animation']['mime_type']; //Estensione del video
+        $this->width_gif = $this->update[$this->messageType]['animation']['width'];
+        $this->size_gif = $this->update[$this->messageType]['animation']['file_size'];
+        $this->height_gif = $this->update[$this->messageType]['animation']['height'];
       }
       if(isset($this->update['channel_post'])){
         $this->message_id = $this->update['channel_post']['message_id'];
@@ -105,67 +119,67 @@ class Bot {
         $this->didascalia = $this->update['channel_post']['caption']; //Didascalia foto
         $this->testo_canale = $this->update['channel_post']['text'];
       }
-      $this->entities = $this->update['message']['entities']; //Entities del messaggio
+      $this->entities = $this->update[$this->messageType]['entities']; //Entities del messaggio
       $this->update_id = $this->update['update_id']; //ID dell'update
-      $this->message_id = $this->update['message']['message_id']; //Message_id del messaggio
-      $this->user_id = $this->update['message']['from']['id']; //ID dell'utente
-      $this->is_bot = $this->update['message']['from']['is_bot']; //is_bot dell'utente
-      $this->nome = $this->update['message']['from']['first_name']; //nome dell'utente
-      $this->username = $this->update['message']['from']['username']; //username dell'utente
-      $this->lingua = $this->update['message']['from']['language_code']; //Lingua dell'utente
-      $this->chat_id = $this->update['message']['chat']['id']; //ID della chat (gruppo, canale, utente)
-      $this->username_chat = $this->update['message']['chat']['username']; //username della chat (gruppo, canale, utente)
-      $this->tipo_chat = $update['message']['chat']['type']; //tipo della chat (gruppo, canale, utente)
-      $this->time = $this->update['message']['chat']['date']; //tempo della chat (gruppo, canale, utente)
-      $this->text = $this->update['message']['text']; //testo del messaggio
-      if(isset($this->update['message']['forward_sender_name'])){ //Se il messaggio è INOLTRATO, ma l'utente ha la privacy mode ON
-        $this->forward_sender_name = $this->update['message']['forward_sender_name']; //Nome del tizio forwardato
-        $this->forward_date = $this->update['message']['forward_date']; //Timestamp messaggio forwardato
-        $this->forward_text = $this->update['message']['text']; //Testo del messaggio forwardato (privacy mode on) [è LO STESSO DI $text]
-      } else if(isset($this->update['message']['forward_from'])){ //Se il messaggio è INOLTRATO
-        $this->forward_chat_id = $this->update['message']['forward_from']['id']; //ID del messaggio forwardato (non message_id)
-        $this->forward_is_bot = $this->update['message']['forward_from']['is_bot']; //is_bot del messaggio forwardato
-        $this->forward_nome = $this->update['message']['forward_from']['first_name']; //nome del messaggio forwardato
-        $this->forward_username = $this->update['message']['forward_from']['username']; //username del messaggio forwardato
-        $this->forward_text = $this->update['message']['text']; //Testo del messaggio forwardato (privacy mode on) [è LO STESSO DI $text]
-        $this->forward_date = $this->update['message']['forward_date']; //Timestamp messaggio forwardato
-        if(isset($this->update['message']['forward_from']['last_name'])){ //se è presente il cognome
-        $this->forward_cognome = $this->update['message']['forward_from']['last_name']; //cognome del messaggio forwardato
+      $this->message_id = $this->update[$this->messageType]['message_id']; //Message_id del messaggio
+      $this->user_id = $this->update[$this->messageType]['from']['id']; //ID dell'utente
+      $this->is_bot = $this->update[$this->messageType]['from']['is_bot']; //is_bot dell'utente
+      $this->nome = $this->update[$this->messageType]['from']['first_name']; //nome dell'utente
+      $this->username = $this->update[$this->messageType]['from']['username']; //username dell'utente
+      $this->lingua = $this->update[$this->messageType]['from']['language_code']; //Lingua dell'utente
+      $this->chat_id = $this->update[$this->messageType]['chat']['id']; //ID della chat (gruppo, canale, utente)
+      $this->username_chat = $this->update[$this->messageType]['chat']['username']; //username della chat (gruppo, canale, utente)
+      $this->tipo_chat = $update[$this->messageType]['chat']['type']; //tipo della chat (gruppo, canale, utente)
+      $this->time = $this->update[$this->messageType]['chat']['date']; //tempo della chat (gruppo, canale, utente)
+      $this->text = $this->update[$this->messageType]['text']; //testo del messaggio
+      if(isset($this->update[$this->messageType]['forward_sender_name'])){ //Se il messaggio è INOLTRATO, ma l'utente ha la privacy mode ON
+        $this->forward_sender_name = $this->update[$this->messageType]['forward_sender_name']; //Nome del tizio forwardato
+        $this->forward_date = $this->update[$this->messageType]['forward_date']; //Timestamp messaggio forwardato
+        $this->forward_text = $this->update[$this->messageType]['text']; //Testo del messaggio forwardato (privacy mode on) [è LO STESSO DI $text]
+      } else if(isset($this->update[$this->messageType]['forward_from'])){ //Se il messaggio è INOLTRATO
+        $this->forward_chat_id = $this->update[$this->messageType]['forward_from']['id']; //ID del messaggio forwardato (non message_id)
+        $this->forward_is_bot = $this->update[$this->messageType]['forward_from']['is_bot']; //is_bot del messaggio forwardato
+        $this->forward_nome = $this->update[$this->messageType]['forward_from']['first_name']; //nome del messaggio forwardato
+        $this->forward_username = $this->update[$this->messageType]['forward_from']['username']; //username del messaggio forwardato
+        $this->forward_text = $this->update[$this->messageType]['text']; //Testo del messaggio forwardato (privacy mode on) [è LO STESSO DI $text]
+        $this->forward_date = $this->update[$this->messageType]['forward_date']; //Timestamp messaggio forwardato
+        if(isset($this->update[$this->messageType]['forward_from']['last_name'])){ //se è presente il cognome
+        $this->forward_cognome = $this->update[$this->messageType]['forward_from']['last_name']; //cognome del messaggio forwardato
         }
-      } else if(isset($this->update['message']['forward_from_chat'])){
-        $this->forward_chat_id = $this->update['message']['forward_from_chat']['id'];
-        $this->forward_title = $this->update['message']['forward_from_chat']['title'];
-        $this->forward_username = $this->update['message']['forward_from_chat']['username'];
-        $this->forward_type = $this->update['message']['forward_from_chat']['type'];
-        $this->forward_from_message_id = $this->update['message']['forward_from_message_id'];
-        $this->forward_date = $this->update['message']['forward_date'];
+      } else if(isset($this->update[$this->messageType]['forward_from_chat'])){
+        $this->forward_chat_id = $this->update[$this->messageType]['forward_from_chat']['id'];
+        $this->forward_title = $this->update[$this->messageType]['forward_from_chat']['title'];
+        $this->forward_username = $this->update[$this->messageType]['forward_from_chat']['username'];
+        $this->forward_type = $this->update[$this->messageType]['forward_from_chat']['type'];
+        $this->forward_from_message_id = $this->update[$this->messageType]['forward_from_message_id'];
+        $this->forward_date = $this->update[$this->messageType]['forward_date'];
       }
-      if(isset($this->update['message']['reply_to_message']['message_id'])){ //Se si sta rispondendo ad un messaggio
-        $this->reply_message_id = $this->update['message']['reply_to_message']['message_id']; //ID del messaggio a cui si stà rispondendo
-        $this->reply_user_id = $this->update['message']['reply_to_message']['from']['id']; //id dell'utente a cui si ha risposto
-        $this->reply_is_bot = $this->update['message']['reply_to_message']['from']['is_bot']; //is_bot dell'utente o bot a cui si ha risposto
-        $this->reply_nome = $this->update['message']['reply_to_message']['from']['first_name']; //Nome dell'utente a cui si ha risposto
-      if(isset($this->update['message']['reply_to_message']['from']['last_name'])){ //Verifica se l'utente ha il cognome
-        $this->reply_cognome = $this->update['message']['reply_to_message']['from']['last_name']; //cognome dell'utente
+      if(isset($this->update[$this->messageType]['reply_to_message']['message_id'])){ //Se si sta rispondendo ad un messaggio
+        $this->reply_message_id = $this->update[$this->messageType]['reply_to_message']['message_id']; //ID del messaggio a cui si stà rispondendo
+        $this->reply_user_id = $this->update[$this->messageType]['reply_to_message']['from']['id']; //id dell'utente a cui si ha risposto
+        $this->reply_is_bot = $this->update[$this->messageType]['reply_to_message']['from']['is_bot']; //is_bot dell'utente o bot a cui si ha risposto
+        $this->reply_nome = $this->update[$this->messageType]['reply_to_message']['from']['first_name']; //Nome dell'utente a cui si ha risposto
+      if(isset($this->update[$this->messageType]['reply_to_message']['from']['last_name'])){ //Verifica se l'utente ha il cognome
+        $this->reply_cognome = $this->update[$this->messageType]['reply_to_message']['from']['last_name']; //cognome dell'utente
       }
-        $this->reply_tipo = $this->update['message']['reply_to_message']['from']['type']; //tipo del messaggio nella chat a cui si stà rispondendo
-        $this->reply_time = $this->update['message']['reply_to_message']['from']['date']; //data messaggio a cui si stà rispondendo
-        $this->reply_username = $this->update['message']['reply_to_message']['from']['username']; //username della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
-        $this->reply_chat_id = $this->update['message']['reply_to_message']['chat']['id']; //ID della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
-        $this->reply_chat_nome = $this->update['message']['reply_to_message']['chat']['first_name']; //nome della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
-        $this->reply_chat_cognome = $this->update['message']['reply_to_message']['chat']['last_name']; //cognome della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
-        $this->reply_chat_tipo = $this->update['message']['reply_to_message']['chat']['type']; //tipo della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
-        $this->reply_time = $this->update['message']['reply_to_message']['date']; //data della chat a cui si stà rispondendo
-        $this->reply_text = $this->update['message']['reply_to_message']['text']; //testo del messaggio a cui si stà rispondendo
-        $this->reply_entities = $this->update['message']['reply_to_message']['entities']; //array delle entities del messaggio a cui si stà rispondendo
-        if(isset($this->update['message']['reply_to_message']['forward_from']['id'])){ //Se è presente una risposta ad un messaggio forwardato
-          $this->chat_id_reply_forward = $this->update['message']['reply_to_message']['forward_from']['id'];
-          $this->is_bot_reply_forward = $this->update['message']['reply_to_message']['forward_from']['is_bot'];
-          $this->nome_reply_forward = $this->update['message']['reply_to_message']['forward_from']['first_name'];
-          $this->time_reply_forward = $this->update['message']['reply_to_message']['forward_date'];
-          $this->text_reply = $this->update['message']['reply_to_message']['text'];
-          if(isset($this->update['message']['reply_to_message']['forward_from']['last_name'])){
-            $this->cognome_reply_forward = $this->update['message']['reply_to_message']['forward_from']['last_name'];
+        $this->reply_tipo = $this->update[$this->messageType]['reply_to_message']['from']['type']; //tipo del messaggio nella chat a cui si stà rispondendo
+        $this->reply_time = $this->update[$this->messageType]['reply_to_message']['from']['date']; //data messaggio a cui si stà rispondendo
+        $this->reply_username = $this->update[$this->messageType]['reply_to_message']['from']['username']; //username della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
+        $this->reply_chat_id = $this->update[$this->messageType]['reply_to_message']['chat']['id']; //ID della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
+        $this->reply_chat_nome = $this->update[$this->messageType]['reply_to_message']['chat']['first_name']; //nome della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
+        $this->reply_chat_cognome = $this->update[$this->messageType]['reply_to_message']['chat']['last_name']; //cognome della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
+        $this->reply_chat_tipo = $this->update[$this->messageType]['reply_to_message']['chat']['type']; //tipo della chat (utente, gruppo, canale) del messaggio a cui si sta rispondendo
+        $this->reply_time = $this->update[$this->messageType]['reply_to_message']['date']; //data della chat a cui si stà rispondendo
+        $this->reply_text = $this->update[$this->messageType]['reply_to_message']['text']; //testo del messaggio a cui si stà rispondendo
+        $this->reply_entities = $this->update[$this->messageType]['reply_to_message']['entities']; //array delle entities del messaggio a cui si stà rispondendo
+        if(isset($this->update[$this->messageType]['reply_to_message']['forward_from']['id'])){ //Se è presente una risposta ad un messaggio forwardato
+          $this->chat_id_reply_forward = $this->update[$this->messageType]['reply_to_message']['forward_from']['id'];
+          $this->is_bot_reply_forward = $this->update[$this->messageType]['reply_to_message']['forward_from']['is_bot'];
+          $this->nome_reply_forward = $this->update[$this->messageType]['reply_to_message']['forward_from']['first_name'];
+          $this->time_reply_forward = $this->update[$this->messageType]['reply_to_message']['forward_date'];
+          $this->text_reply = $this->update[$this->messageType]['reply_to_message']['text'];
+          if(isset($this->update[$this->messageType]['reply_to_message']['forward_from']['last_name'])){
+            $this->cognome_reply_forward = $this->update[$this->messageType]['reply_to_message']['forward_from']['last_name'];
           } //Fine reply_forward
       } //Fine reply_to_message
       } else if(isset($this->update['inline_query']['id'])){ //Se è un inline_query
@@ -183,20 +197,24 @@ class Bot {
       $this->inline_offset = $this->update['inline_query']['offset']; //offset dell'inline query
     } //Fine inline_query
     } //Fine verifica messaggio
+    } //Fine verifica json
+    } //Fine __construct
 
-  } //Fine __construct
+
 
   #FUNZIONI
 
   public function cURL($url){
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, TRUE);
+
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
+   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+   curl_setopt($ch, CURLOPT_URL, $url);
+   $output = curl_exec($ch);
+   curl_close($ch);
+   return json_decode($output, TRUE);
+
   }
 
   public function deleteMessage($user_id,$message_id){
@@ -407,8 +425,6 @@ class Bot {
 
   if($caption == false){
     $caption = '';
-  } else {
-    $caption = '&caption='.urlencode($caption);
   }
 
   $ch = curl_init();
