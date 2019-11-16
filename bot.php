@@ -261,7 +261,7 @@ class Bot {
   }
 
   public function unbanChatMember($chat_id,$user_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$chat_id&user_id=$user_id";
+    $url = 'https://api.telegram.org/bot'.$this->bot."/unbanChatMember?chat_id=$chat_id&user_id=$user_id";
     return $this->cURL($url);
   }
 
