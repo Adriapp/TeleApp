@@ -350,9 +350,9 @@ class Bot {
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '{"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
         } else if($type == 'inline'){
-            $rm = '{"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
     } else {
       $rm = '';
@@ -604,7 +604,8 @@ class Bot {
       'method' => 'editMessageText',
       'parse_mode' => $parse_mode,
       'text' => $newText,
-      'disable_web_page_preview' => $disableWebPagePreview
+      'disable_web_page_preview' => $disableWebPagePreview,
+      'reply_markup' => $rm
     );
 
     echo json_encode($parameters, TRUE);
