@@ -347,9 +347,13 @@ class Bot {
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
+            $rm = array(
+            'keyboard' => $keyboard,
+            'resize_keyboard' => true);
         } else if($type == 'inline'){
-            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+            $rm = array(
+            'inline_keyboard' => $keyboard,
+            'resize_keyboard' => true);
         }
     } else {
       $rm = '';
@@ -558,9 +562,13 @@ class Bot {
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
+            $rm = array(
+            'keyboard' => $keyboard,
+            'resize_keyboard' => true);
         } else if($type == 'inline'){
-            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+            $rm = array(
+            'inline_keyboard' => $keyboard,
+            'resize_keyboard' => true);
         }
     } else {
       $rm = '';
