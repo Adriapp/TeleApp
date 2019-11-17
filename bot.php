@@ -59,7 +59,8 @@ class Bot {
         $this->nome_chat = $this->update[$this->messageType]['chat']['first_name'];
         if(isset($this->update[$this->messageType]['from']['last_name'])){
         $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
-        } else {
+        }
+      } else if(isset($this->update[$this->messageType]['chat']['title'])){
         $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
       }
     }
