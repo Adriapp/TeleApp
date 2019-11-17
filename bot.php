@@ -314,7 +314,7 @@ class Bot {
     return $this->cURL($url);
   }
 
-  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false){
+  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false, $disableWebPagePreview = true){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -338,15 +338,11 @@ class Bot {
       $parse_mode = '&parse_mode='.$parse_mode;
     }
 
-    $forceReply = '&force_reply='.$forceReply;
-
-    $notifica = '&disable_notification='.$notifica;
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&disable_web_page_preview=true&text=" . urlencode($text) . $parse_mode . $rm . $risposta . $forceReply . $notifica;
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&text=" . urlencode($text) . $parse_mode . '&disable_web_page_preview=' . $disableWebPagePreview . $rm . $risposta . $forceReply . '&disable_notification=' . $notifica . '&force_reply=' . $forceReply;
     return $this->cURL($url);
   }
 
-  public function sendMessage2($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
+  public function sendMessage2($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false, $disableWebPagePreview = true){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -356,18 +352,6 @@ class Bot {
         }
     } else {
       $rm = '';
-    }
-
-    if($risposta != false){
-      $risposta = $risposta;
-    }
-
-    if($forceReply != false){
-      $forceReply = true;
-    }
-
-    if($notifica != false){
-      $notifica = true;
     }
 
     if($parse_mode == false){
@@ -384,7 +368,8 @@ class Bot {
       'reply_to_message_id' => $risposta,
       'reply_markup' => $rm,
       'parse_mode' => $parse_mode,
-      'text' => $text
+      'text' => $text,
+      'disable_web_page_preview' => $disableWebPagePreview
     );
 
     echo json_encode($parameters, TRUE);
