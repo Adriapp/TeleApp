@@ -546,10 +546,6 @@ class Bot {
       $rm = '';
     }
 
-    if($disableWebPagePreview != true){
-      $disableWebPagePreview = false;
-    }
-
     if($parse_mode == false){
       $parse_mode = 'HTML';
     }
@@ -572,10 +568,6 @@ class Bot {
 
     if($parse_mode == false){
       $parse_mode = 'HTML';
-    }
-
-    if($disableWebPagePreview != true){
-      $disableWebPagePreview = false;
     }
 
     header('Content-Type: application/json');
