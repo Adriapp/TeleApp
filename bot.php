@@ -222,6 +222,20 @@ class Bot {
     return $this->cURL($url);
   }
 
+  public function deleteMessage2($user_id,$message_id){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
+
+    header('Content-Type: application/json');
+
+    $parameters = array(
+      'chat_id' => $user_id,
+      'message_id' => $message_id,
+      'method' => 'deleteMessage'
+    );
+
+    echo json_encode($parameters, TRUE);
+
+  }
+
   public function restrictChatMember($chat_id,$user_id,$perms = false, $until_date = false){
 
     if($until_date == false){
@@ -296,11 +310,12 @@ class Bot {
   }
 
   public function forwardMessage($from_chat_id,$user_id,$message_id){
-  $url = 'https://api.telegram.org/bot'.$this->bot."/forwardMessage?from_chat_id=$from_chat_id&chat_id=$user_id&message_id=$message_id";
-  return $this->cURL($url);
+    $url = 'https://api.telegram.org/bot'.$this->bot."/forwardMessage?from_chat_id=$from_chat_id&chat_id=$user_id&message_id=$message_id";
+    return $this->cURL($url);
   }
 
-  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false){
+  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false){
+
     if ($keyboard != false) {
         if ($type == 'fisica') {
             $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
@@ -317,25 +332,68 @@ class Bot {
       $risposta = '&reply_to_message_id='.$risposta;
     }
 
-    if($forceReply == false){
-      $forceReply = '';
+    if($parse_mode == false){
+      $parse_mode = '&parse_mode=HTML';
     } else {
-      $forceReply = '&force_reply=true';
+      $parse_mode = '&parse_mode='.$parse_mode;
     }
 
-    if($notifica == false){
-      $notifica = '';
-    } else {
-      $notifica = '&disable_notification=true';
-    }
+    $forceReply = '&force_reply='.$forceReply;
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&parse_mode=HTML&disable_web_page_preview=true&text=" . urlencode($text) . $rm . $risposta . $forceReply . $notifica;
+    $notifica = '&disable_notification='.$notifica;
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&disable_web_page_preview=true&text=" . urlencode($text) . $parse_mode . $rm . $risposta . $forceReply . $notifica;
     return $this->cURL($url);
   }
 
+  public function sendMessage2($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
+
+    if ($keyboard != false) {
+        if ($type == 'fisica') {
+            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        } else if($type == 'inline'){
+            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        }
+    } else {
+      $rm = '';
+    }
+
+    if($risposta != false){
+      $risposta = $risposta;
+    }
+
+    if($forceReply != false){
+      $forceReply = true;
+    }
+
+    if($notifica != false){
+      $notifica = true;
+    }
+
+    if($parse_mode == false){
+      $parse_mode = 'HTML';
+    }
+
+    header('Content-Type: application/json');
+
+    $parameters = array(
+      'chat_id' => $user_id,
+      'method' => 'sendMessage',
+      'disable_notification' => $notifica,
+      'force_reply' => $forceReply,
+      'reply_to_message_id' => $risposta,
+      'reply_markup' => $rm,
+      'parse_mode' => $parse_mode,
+      'text' => $text
+    );
+
+    echo json_encode($parameters, TRUE);
+
+  }
+
   public function sendSticker($user_id,$sticker){
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendSticker?chat_id=$user_id&sticker=$sticker";
-  return $this->cURL($url);
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendSticker?chat_id=$user_id&sticker=$sticker";
+    return $this->cURL($url);
   }
 
   public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false, $file_id = true){
@@ -350,64 +408,64 @@ class Bot {
       $rm = '';
     }
 
-  if($caption == false){
-    $caption = '';
-  }
+    if($caption == false){
+      $caption = '';
+    }
 
-  $ch = curl_init();
+    $ch = curl_init();
 
-  if($file_id == true){
-    $args = [
-    'caption' => $caption,
-    'chat_id' => $user_id,
-    'photo' => $photo,
-    'reply_markup' => $rm,
-    'parse_mode' => 'HTML'
-    ];
-  } else {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
-    $photoFile = new CURLFile($photo);
-    $args = [
-    'caption' => $caption,
-    'chat_id' => $user_id,
-    'photo' => $photoFile,
-    'reply_markup' => $rm,
-    'parse_mode' => 'HTML'
-    ];
-  }
-  curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendPhoto');
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
-  }
+    if($file_id == true){
+      $args = [
+        'caption' => $caption,
+        'chat_id' => $user_id,
+        'photo' => $photo,
+        'reply_markup' => $rm,
+        'parse_mode' => 'HTML'
+      ];
+    } else {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+      $photoFile = new CURLFile($photo);
+      $args = [
+        'caption' => $caption,
+        'chat_id' => $user_id,
+        'photo' => $photoFile,
+        'reply_markup' => $rm,
+        'parse_mode' => 'HTML'
+      ];
+    }
+    curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendPhoto');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
+    }
 
   public function sendAudio($user_id,$audio,$caption = false){
 
-  if($caption == false){
-    $caption = '';
-  } else {
-    $caption = '&caption='.urlencode($caption);
-  }
+    if($caption == false){
+      $caption = '';
+    } else {
+      $caption = '&caption='.urlencode($caption);
+    }
 
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio).$caption;
-  return $this->cURL($url);
-  }
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio).$caption;
+    return $this->cURL($url);
+    }
 
   public function sendVideo($user_id,$video,$caption = false){
 
-  if($caption == false){
-    $caption = '';
-  } else {
-    $caption = '&caption='.urlencode($caption);
-  }
+    if($caption == false){
+      $caption = '';
+    } else {
+      $caption = '&caption='.urlencode($caption);
+    }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video".$caption;
-  return $this->cURL($url);
-  }
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video".$caption;
+    return $this->cURL($url);
+    }
 
   public function sendMediaGroup($user_id,$album,$caption = false){
 
@@ -423,47 +481,47 @@ class Bot {
 
   public function sendDocument($user_id, $document, $file_id = true, $caption = false){
 
-  if($caption == false){
-    $caption = '';
-  }
+    if($caption == false){
+      $caption = '';
+    }
 
-  $ch = curl_init();
+    $ch = curl_init();
 
-  if($file_id == true){
-    $args = [
-    'chat_id' => $user_id,
-    'document' => $document,
-    'caption' => $caption
-    ];
-  } else {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
-    $document = new CURLFile($document);
-    $args = [
-    'chat_id' => $user_id,
-    'document' => $document,
-    'caption' => $caption
-    ];
-  }
+    if($file_id == true){
+      $args = [
+        'chat_id' => $user_id,
+        'document' => $document,
+        'caption' => $caption
+      ];
+    } else {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+      $document = new CURLFile($document);
+      $args = [
+        'chat_id' => $user_id,
+        'document' => $document,
+        'caption' => $caption
+      ];
+    }
 
-  curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendDocument');
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  return json_decode($output, TRUE);
+    curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/sendDocument');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
   }
 
   public function sendVoice($user_id,$voice,$caption = false){
 
-  if($caption == false){
-    $caption = '';
-  } else {
-    $caption = '&caption='.urlencode($caption);
-  }
+    if($caption == false){
+      $caption = '';
+    } else {
+      $caption = '&caption='.urlencode($caption);
+    }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
-  return $this->cURL($url);
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
+    return $this->cURL($url);
   }
 
   public function sendAnimation($user_id,$animation,$caption = false){
@@ -474,8 +532,8 @@ class Bot {
         $caption = '&caption='.urlencode($caption);
     }
 
-  $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
-  return $this->cURL($url);
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
+    return $this->cURL($url);
   }
 
   public function answerCallbackQuery($callback_query_id,$text,$show_alert = true){
@@ -490,7 +548,8 @@ class Bot {
     return $this->cURL($url);
   }
 
-  public function editMessageText($user_id, $message_id, $newText, $keyboard = false, $type = false){
+  public function editMessageText($user_id, $message_id, $newText, $keyboard = false, $type = false, $parse_mode = false, $disableWebPagePreview = true){
+
     if ($keyboard != false) {
         if ($type == 'fisica') {
             $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
@@ -500,8 +559,56 @@ class Bot {
     } else {
       $rm = '';
     }
-    $url = 'https://api.telegram.org/bot'.$this->bot."/editMessageText?chat_id=$user_id&message_id=$message_id&disable_web_page_preview=true&parse_mode=HTML&text=".urlencode($newText) . $rm;
+
+    if($disableWebPagePreview == true){
+      $disableWebPagePreview = true;
+    } else {
+      $disableWebPagePreview = false;
+    }
+
+    if($parse_mode == false){
+      $parse_mode = 'HTML';
+    }
+
+    $url = 'https://api.telegram.org/bot'.$this->bot."/editMessageText?chat_id=$user_id&message_id=$message_id&text=".urlencode($newText) . '&disable_web_page_preview=' . $disableWebPagePreview . '&parse_mode=' . $parse_mode . $rm;
     return $this->cURL($url);
+  }
+
+  public function editMessageText2($user_id, $message_id, $newText, $keyboard = false, $type = false, $parse_mode = false, $disableWebPagePreview = true){
+
+    if ($keyboard != false) {
+        if ($type == 'fisica') {
+            $rm = '&reply_markup={"keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        } else if($type == 'inline'){
+            $rm = '&reply_markup={"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        }
+    } else {
+      $rm = '';
+    }
+
+    if($parse_mode == false){
+      $parse_mode = 'HTML';
+    }
+
+    if($disableWebPagePreview == true){
+      $disableWebPagePreview = true;
+    } else {
+      $disableWebPagePreview = false;
+    }
+
+    header('Content-Type: application/json');
+
+    $parameters = array(
+      'chat_id' => $user_id,
+      'message_id' => $message_id,
+      'method' => 'editMessageText',
+      'parse_mode' => $parse_mode,
+      'text' => $newText,
+      'disable_web_page_preview' => $disableWebPagePreview
+    );
+
+    echo json_encode($parameters, TRUE);
+
   }
 
   public function leaveChat($chat_id){
