@@ -61,9 +61,6 @@ class Bot {
         $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
         }
       }
-      if(isset($this->update[$this->messageType]['chat']['title'])){
-        $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
-      }
       if(isset($this->update[$this->messageType]['sticker'])){ #Se è uno sticker
         $this->is_animated = $this->update[$this->messageType]['sticker']['is_animated']; //Se è animato [true/false]
         $this->width_sticker = $this->update[$this->messageType]['sticker']['width'];
@@ -133,6 +130,9 @@ class Bot {
       $this->tipo_chat = $update[$this->messageType]['chat']['type']; //tipo della chat (gruppo, canale, utente)
       $this->time = $this->update[$this->messageType]['chat']['date']; //tempo della chat (gruppo, canale, utente)
       $this->text = $this->update[$this->messageType]['text']; //testo del messaggio
+      if(isset($this->update[$this->messageType]['chat']['title'])){
+        $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
+      }
       if(isset($this->update[$this->messageType]['forward_sender_name'])){ //Se il messaggio è INOLTRATO, ma l'utente ha la privacy mode ON
         $this->forward_sender_name = $this->update[$this->messageType]['forward_sender_name']; //Nome del tizio forwardato
         $this->forward_date = $this->update[$this->messageType]['forward_date']; //Timestamp messaggio forwardato
@@ -546,9 +546,7 @@ class Bot {
       $rm = '';
     }
 
-    if($disableWebPagePreview == true){
-      $disableWebPagePreview = true;
-    } else {
+    if($disableWebPagePreview != true){
       $disableWebPagePreview = false;
     }
 
@@ -564,9 +562,9 @@ class Bot {
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '&reply_markup={"keyboard":['.$keyboard.'],"resize_keyboard":true}';
         } else if($type == 'inline'){
-            $rm = '&reply_markup={"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '&reply_markup={"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
     } else {
       $rm = '';
@@ -576,9 +574,7 @@ class Bot {
       $parse_mode = 'HTML';
     }
 
-    if($disableWebPagePreview == true){
-      $disableWebPagePreview = true;
-    } else {
+    if($disableWebPagePreview != true){
       $disableWebPagePreview = false;
     }
 
