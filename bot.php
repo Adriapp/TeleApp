@@ -386,9 +386,9 @@ class Bot {
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
         } else if($type == 'inline'){
-            $rm = '&reply_markup={"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
         }
     } else {
       $rm = '';
