@@ -60,10 +60,10 @@ class Bot {
         if(isset($this->update[$this->messageType]['from']['last_name'])){
         $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
         }
-      } else if(isset($this->update[$this->messageType]['chat']['title'])){
+      }
+      if(isset($this->update[$this->messageType]['chat']['title'])){
         $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
       }
-    }
       if(isset($this->update[$this->messageType]['sticker'])){ #Se è uno sticker
         $this->is_animated = $this->update[$this->messageType]['sticker']['is_animated']; //Se è animato [true/false]
         $this->width_sticker = $this->update[$this->messageType]['sticker']['width'];
