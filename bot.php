@@ -465,10 +465,14 @@ class Bot {
     return $this->cURL($url);
   }
 
-  public function sendDocument($user_id, $document, $file_id = true, $caption = false){
+  public function sendDocument($user_id, $document, $file_id = true, $caption = false, $parse_mode = false){
 
     if($caption == false){
       $caption = '';
+    }
+
+    if($parse_mode == false){
+      $parse_mode = 'HTML';
     }
 
     $ch = curl_init();
@@ -477,7 +481,8 @@ class Bot {
       $args = [
         'chat_id' => $user_id,
         'document' => $document,
-        'caption' => $caption
+        'caption' => $caption,
+        'parse_mode' => $parse_mode
       ];
     } else {
       curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
@@ -485,7 +490,8 @@ class Bot {
       $args = [
         'chat_id' => $user_id,
         'document' => $document,
-        'caption' => $caption
+        'caption' => $caption,
+        'parse_mode' => $parse_mode
       ];
     }
 
@@ -589,6 +595,19 @@ class Bot {
   public function leaveChat($chat_id){
     $url = 'https://api.telegram.org/bot'.$this->bot."/leaveChat?chat_id=$chat_id";
     return $this->cURL($url);
+  }
+
+  public function leaveChat2($chat_id){
+
+    header('Content-Type: application/json');
+
+    $parameters = array(
+      'chat_id' => $user_id,
+      'method' => 'leaveChat'
+    );
+
+    echo json_encode($parameters, TRUE);
+
   }
 
   public function pinChatMessage($chat_id,$message_id,$disable_notification = false){
