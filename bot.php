@@ -86,12 +86,14 @@ class Bot {
       }
       if(isset($this->update[$this->messageType]['photo'])){ //Se è una foto
         $this->didascalia = $this->update[$this->messageType]['caption']; //Didascalia foto
+        $this->file_unique_id = $this->update[$this->messageType]['photo']['file_unique_id']; //file_id del file
         $this->foto = $this->update[$this->messageType]['photo']['2']['file_id']; //File_id della foto inviata
       }
       if(isset($this->update[$this->messageType]['document'])){ //Se è un file/documento
         $this->nome_file = $this->update[$this->messageType]['document']['file_name']; //Nome del file
         $this->tipo_file = $this->update[$this->messageType]['document']['mime_type']; //Estensione del file
         $this->file = $this->update[$this->messageType]['document']['file_id']; //file_id del file
+        $this->file_unique_id = $this->update[$this->messageType]['document']['file_unique_id']; //file_id del file
         $this->tipo_file = $this->update[$this->messageType]['document']['mime_type']; //Estensione del file
         $this->size_file = $this->update[$this->messageType]['document']['file_size']; //Peso del file in byte
       }
@@ -99,6 +101,7 @@ class Bot {
         $this->durata_video = $this->update[$this->messageType]['video']['duration']; //Durata video
         $this->video = $this->update[$this->messageType]['video']['file_id']; //File_id del video
         $this->tipo_video = $this->update[$this->messageType]['video']['mime_type']; //Estensione del video
+        $this->file_unique_id = $this->update[$this->messageType]['video']['file_unique_id']; //file_id del file
         $this->width_video = $this->update[$this->messageType]['video']['width'];
         $this->size_video = $this->update[$this->messageType]['video']['file_size'];
         $this->height_video = $this->update[$this->messageType]['video']['height'];
