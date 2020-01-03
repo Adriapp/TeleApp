@@ -32,7 +32,7 @@ class Bot {
 
     if(isset($this->update['callback_query']['id'])){ //Se l'update è un callback_query
       if(isset($this->update['callback_query']['from']['last_name'])){
-      $this->callback_cognome = $this->update['callback_query']['from']['last_name']; //cognome dell'utente che ha cliccato il pulsante
+        $this->callback_cognome = $this->update['callback_query']['from']['last_name']; //cognome dell'utente che ha cliccato il pulsante
       }
       $this->update_id = $this->update['update_id']; //ID dell'update
       $this->callback_query_id = $this->update['callback_query']['id']; //callback_query_id
@@ -56,9 +56,9 @@ class Bot {
       $this->callback_data = $this->update['callback_query']['data']; //callback_data
     } else if(isset($this->update[$this->messageType]['message_id'])){ //Se l'update è un messaggio
       if(isset($this->update[$this->messageType]['chat']['first_name'])){ //Se il tipochat è private
-        $this->nome_chat = $this->update[$this->messageType]['chat']['first_name'];
+          $this->nome_chat = $this->update[$this->messageType]['chat']['first_name'];
         if(isset($this->update[$this->messageType]['from']['last_name'])){
-        $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
+          $this->cognome = $this->update[$this->messageType]['from']['last_name']; //cognome dell'utente
         }
       }
       if(isset($this->update[$this->messageType]['sticker'])){ #Se è uno sticker
@@ -148,7 +148,7 @@ class Bot {
         $this->forward_text = $this->update[$this->messageType]['text']; //Testo del messaggio forwardato (privacy mode on) [è LO STESSO DI $text]
         $this->forward_date = $this->update[$this->messageType]['forward_date']; //Timestamp messaggio forwardato
         if(isset($this->update[$this->messageType]['forward_from']['last_name'])){ //se è presente il cognome
-        $this->forward_cognome = $this->update[$this->messageType]['forward_from']['last_name']; //cognome del messaggio forwardato
+          $this->forward_cognome = $this->update[$this->messageType]['forward_from']['last_name']; //cognome del messaggio forwardato
         }
       } else if(isset($this->update[$this->messageType]['forward_from_chat'])){
         $this->forward_chat_id = $this->update[$this->messageType]['forward_from_chat']['id'];
@@ -264,9 +264,9 @@ class Bot {
 
 
     if($perms != false){
-    $permessi = '&permissions='.http_build_query($perms);
+      $permessi = '&permissions='.http_build_query($perms);
     } else {
-    $permessi = '';
+      $permessi = '';
     }
 
     $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi;
