@@ -269,7 +269,7 @@ class Bot {
       $permessi = '';
     }
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi;
+    $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi.'&until_date='.$until_date;
     return $this->cURL($url);
   }
 
