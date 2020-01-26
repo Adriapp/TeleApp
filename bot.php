@@ -342,7 +342,7 @@ class Bot {
       $parse_mode = '&parse_mode='.$parse_mode;
     }
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&text=" . urlencode($text) . $parse_mode . '&disable_web_page_preview=' . $disableWebPagePreview . $rm . $risposta . $forceReply . '&disable_notification=' . $notifica . '&force_reply=' . $forceReply;
+    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&text=" . urlencode($text) . $parse_mode . '&disable_web_page_preview=' . $disableWebPagePreview . $rm . $risposta . '&force_reply=' . $forceReply . '&disable_notification=' . $notifica . '&force_reply=' . $forceReply;
     return $this->cURL($url);
   }
 
