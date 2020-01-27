@@ -1,6 +1,6 @@
 ﻿<?php
 
-# Copyright Adriapp, con l'aiuto di tappo03, Nen3one, XDiamond7D7 e J3ckend (Gi4cca)
+# Copyright Adriapp, con l'aiuto di tappo03, Nen3one, XDiamond7D7, sonicmaster (Nicola), e J3ckend (Gi4cca)
 
 $Adriano = 588347428;
 
