@@ -346,6 +346,8 @@ class Bot {
         } else if($type == 'inline'){
             $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
+    }  else if($forceReply == true){
+      $rm = '{"force_reply":"true"}';
     } else {
       $rm = '';
     }
@@ -377,6 +379,8 @@ class Bot {
         } else if($type == 'inline'){
             $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
+    }   else if($forceReply == true){
+      $rm = '{"force_reply":"true"}';
     } else {
       $rm = '';
     }
@@ -387,7 +391,6 @@ class Bot {
       'chat_id' => $user_id,
       'method' => 'sendMessage',
       'disable_notification' => $notifica,
-      'force_reply' => $forceReply,
       'reply_to_message_id' => $risposta,
       'reply_markup' => $rm,
       'parse_mode' => $parse_mode,
