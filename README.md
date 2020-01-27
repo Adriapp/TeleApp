@@ -6,7 +6,7 @@ Sentiti libero di suggerire delle modifiche :D
 
 # Installazione
 
-<code>sudo apt install git</code>
+<code>sudo apt install git</code><br>
 <code>git clone https://github.com/Adriapp/TeleApp</code>
 
 # Getting Started
