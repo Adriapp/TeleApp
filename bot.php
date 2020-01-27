@@ -1,8 +1,6 @@
 ﻿<?php
 
-# Data creazione framework: 04/09/2019
-
-# Copyright Adriano Palma & Tappus
+# Copyright Adriapp, con l'aiuto di tappo03, Nen3one, XDiamond7D7 e J3ckend (Gi4cca)
 
 $Adriano = 588347428;
 
