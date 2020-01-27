@@ -363,7 +363,6 @@ class Bot {
       'disable_web_page_preview=' => $disableWebPagePreview,
       'reply_markup' => $rm,
       'reply_to_message_id' => $risposta,
-      'force_reply' => $forceReply,
       'disable_notification' => $notifica,
     ];
 
