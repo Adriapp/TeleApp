@@ -618,17 +618,18 @@ class Bot {
   }
 
   public function editMessageText($user_id, $message_id, $text, $keyboard = false, $type = false, $parse_mode = 'HTML', $disableWebPagePreview = true){
-
+        
     if ($keyboard != false) {
-        if ($type == 'fisica') {
-            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
-        } else if($type == 'inline'){
-            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+            if ($type == 'fisica') {
+                $rm = '{"keyboard":[' . $keyboard . '],"resize_keyboard":true}';
+            }
+            else if ($type == 'inline') {
+                $rm = '{"inline_keyboard":[' . $keyboard . '],"resize_keyboard":true}';
+            }
         }
-    } else {
-      $rm = '';
-    }
-
+        else {
+            $rm = '';
+        }
     $post = [
       'chat_id' => $user_id,
       'message_id' => $message_id,
