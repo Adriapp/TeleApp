@@ -349,7 +349,7 @@ class Bot {
             $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
     }  else if($forceReply == true){
-      $rm = '{"force_reply":"true"}';
+      $rm = '{"force_reply":true}';
     } else {
       $rm = '';
     }
