@@ -131,7 +131,7 @@ class Bot {
       $this->chat_id = $this->update[$this->messageType]['chat']['id']; //ID della chat (gruppo, canale, utente)
       $this->username_chat = $this->update[$this->messageType]['chat']['username']; //username della chat (gruppo, canale, utente)
       $this->tipo_chat = $this->update[$this->messageType]['chat']['type']; //tipo della chat (gruppo, canale, utente)
-      $this->time = $this->update[$this->messageType]['chat']['date']; //tempo della chat (gruppo, canale, utente)
+      $this->time = $this->update[$this->messageType]['date']; //tempo della chat (gruppo, canale, utente)
       $this->text = $this->update[$this->messageType]['text']; //testo del messaggio
       if(isset($this->update[$this->messageType]['chat']['title'])){
         $this->nome_chat = $this->update[$this->messageType]['chat']['title']; //titolo chat
