@@ -226,7 +226,7 @@ class Bot {
       'chat_id' => $user_id,
       'message_id' => $message_id
     ];
-    
+
     return $this->cURL('/deleteMessage', $post);
 
   }
@@ -251,7 +251,7 @@ class Bot {
       'chat_id' => $chat_id,
       'user_id' => $user_id,
       'until_date' => $until_date,
-    ]; 
+    ];
 
     $post = array_merge($post, $perms);
 
@@ -322,7 +322,7 @@ class Bot {
       'user_id' => $user_id,
       'action' => $action
     ];
-    
+
     return $this->cURL('/sendChatAction',$post);
 
   }
@@ -362,7 +362,7 @@ class Bot {
       'chat_id' => $user_id,
       'text' => $text,
       'parse_mode' => $parse_mode,
-      'disable_web_page_preview=' => $disableWebPagePreview,
+      'disable_web_page_preview' => $disableWebPagePreview,
       'reply_markup' => $rm,
       'reply_to_message_id' => $risposta,
       'disable_notification' => $notifica,
@@ -416,7 +416,7 @@ class Bot {
   public function uploadStickerFile($user_id, $png_sticker){
 
     $ch = curl_init();
-  
+
     $png_sticker = new CURLFile($png_sticker);
 
     $post = [
@@ -431,9 +431,9 @@ class Bot {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $output = curl_exec($ch);
     curl_close($ch);
-  
+
     return json_decode($output, TRUE);
-    
+
   }
 
   public function sendSticker($user_id,$sticker, $keyboard = false, $type = false, $reply_to_message_id = false, $disable_notification = false, $forceReply = false){
@@ -460,9 +460,9 @@ class Bot {
       'reply_to_message_id' => $reply_to_message_id,
       'force_reply' => $forceReply
     ];
-    
+
     return $this->cURL('/sendSticker',$post);
-    
+
   }
 
   public function sendPhoto($user_id, $photo, $caption = '', $keyboard = false, $type = false, $file_id = true){
@@ -516,7 +516,7 @@ class Bot {
      'audio' => $audio,
      'caption' => $caption
     ];
-   
+
     return $this->cURL('/sendAudio', $post);
 
   }
@@ -530,18 +530,18 @@ class Bot {
     ];
 
     return $this->cURL('/sendVideo', $post);
-    
+
   }
 
   public function sendMediaGroup($user_id,$album,$caption = ''){
-    
-      
+
+
     $post = [
       'chat_id' => $user_id,
       'media' => json_encode($album),
       'caption' => $caption,
     ];
-      
+
     return $this->cURL('/sendMediaGroup',$post);
 
   }
@@ -598,7 +598,7 @@ class Bot {
   }
 
   public function sendAnimation($user_id,$animation,$caption = ''){
-    
+
     $post = [
       'chat_id' => $user_id,
       'animation' => $animation,
@@ -616,13 +616,13 @@ class Bot {
       'text' => $text,
       'show_alert' => $show_alert
     ];
-    
+
     return $this->cURL('/answerCallbackQuery', $post);
-    
+
   }
 
   public function editMessageText($user_id, $message_id, $text, $keyboard = false, $type = false, $parse_mode = 'HTML', $disableWebPagePreview = true){
-        
+
     if ($keyboard != false) {
             if ($type == 'fisica') {
                 $rm = '{"keyboard":[' . $keyboard . '],"resize_keyboard":true}';
@@ -642,7 +642,7 @@ class Bot {
       'parse_mode' => $parse_mode,
       'reply_markup' => $rm
     ];
-    
+
     return $this->cURL('/editMessageText', $post);
 
   }
@@ -658,7 +658,7 @@ class Bot {
     } else {
       $rm = '';
     }
-    
+
     header('Content-Type: application/json');
 
     $parameters = [
@@ -680,7 +680,7 @@ class Bot {
     $post = [
       'chat_id' => $chat_id
     ];
-    
+
     return $this->cURL('/leaveChat', $post);
 
   }
@@ -717,7 +717,7 @@ class Bot {
     ];
 
     return $this->cURL('/getChat', $post);
-    
+
   }
 
   public function deleteWebhook($token = false){
@@ -743,29 +743,29 @@ class Bot {
     ];
 
     return $this->cURL('/setWebhook',$post);
-    
+
   }
 
   public function getWebhookInfo($token = false){
-    
+
     if(!$token) $token = $this->bot;
-    
+
     $post = [
       'token' => $token
     ];
-    
+
     return $this->cURL('/getWebhookInfo',$post);
-    
+
   }
 
   public function getChatAdministrators($chat_id){
-    
+
     $post = [
       'chat_id' => $chat_id
     ];
 
     return $this->cURL('/getChatAdministrators', $post);
-    
+
   }
 
   public function getChatMembersCount($chat_id){
@@ -775,7 +775,7 @@ class Bot {
     ];
 
     return $this->cURL('/getChatMembersCount',$post);
-    
+
   }
 
   public function getChatMember($chat_id, $user_id){
@@ -783,13 +783,13 @@ class Bot {
       'chat_id' => $chat_id,
       'user_id' => $user_id
     ];
-    
+
     return $this->cURL('/getChatMember', $post);
 
   }
 
   public function gestisciInlineQuery($inlineData,$switchText = 'Ritorna al bot', $switchParameter = 123, $cacheTime = 0){
-  
+
   $post = [
     'inline_query_id' => $this->inline_id,
     'results' => json_encode($inlineData,true),
@@ -797,11 +797,11 @@ class Bot {
     'switch_pm_text' => $switchText,
     'switch_pm_parameter' => $switchParameter
   ];
-        
+
                return $this->cURL('/answerInlineQuery', $post);
-  
+
                # ESEMPIO DI OGGETTO INLINE
-  
+
                /*
                $inlineData=[[
                    "type" => "article",
@@ -820,10 +820,10 @@ class Bot {
                     "description" => "Qua la tua descrizione 2"
                  ]
                  ];
-  
+
                 */
-  
-  
+
+
     }
 
 
