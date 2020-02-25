@@ -18,7 +18,7 @@ class Bot {
 
     #Variabili
 
-    $this->update = json_decode($this->json, TRUE);
+    $this->update = json_decode($json, TRUE);
 
     if($this->update != null){
 
