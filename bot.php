@@ -1,8 +1,8 @@
 <?php
 
-# Data creazione framework: 04/09/2019
+# [BETA] - In fase di testing
 
-# Copyright Adriano Palma
+# Copyright Adriapp, con l'aiuto di tappo03, Nen3one, XDiamond7D7, sonicmaster (Nicola), e J3ckend (Gi4cca)
 
 $Adriano = 588347428;
 
@@ -11,14 +11,14 @@ class Bot {
   public function __construct($token,$json = false){
 
     if($json == false){
-      $this->json = file_get_contents('php://input');
+      $json = file_get_contents('php://input');
     }
 
     $this->bot = $token;
 
     #Variabili
 
-    $this->update = json_decode($this->json, TRUE);
+    $this->update = json_decode($json, TRUE);
 
     if($this->update != null){
 
@@ -208,145 +208,171 @@ class Bot {
 
   #FUNZIONI
 
-  public function cURL($url){
+  public function cURL($url, $post){
 
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 6);
-   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-   curl_setopt($ch, CURLOPT_URL, $url);
-   $output = curl_exec($ch);
-   curl_close($ch);
-   return json_decode($output, TRUE);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.$url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, TRUE);
 
   }
 
   public function deleteMessage($user_id,$message_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/deleteMessage?chat_id=$user_id&message_id=$message_id";
-    return $this->cURL($url);
+    $post = [
+      'chat_id' => $user_id,
+      'message_id' => $message_id
+    ];
+    
+    return $this->cURL('/deleteMessage', $post);
+
   }
 
   public function deleteMessage2($user_id,$message_id){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
 
     header('Content-Type: application/json');
 
-    $parameters = array(
+    $parameters = [
       'chat_id' => $user_id,
       'message_id' => $message_id,
       'method' => 'deleteMessage'
-    );
+    ];
 
     echo json_encode($parameters, TRUE);
 
   }
 
-  public function restrictChatMember($chat_id,$user_id,$perms = false, $until_date = false){
+  public function restrictChatMember($chat_id, $user_id, $perms = false, $until_date = 0){
 
-    if($until_date == false){
-      $until_date = 0;
-    }
+    $post = [
+      'chat_id' => $chat_id,
+      'user_id' => $user_id,
+      'until_date' => $until_date,
+    ]; 
 
-    if($perms != false){
-    $permessi = '&permissions='.http_build_query($perms);
-    } else {
-    $permessi = '';
-    }
+    $post = array_merge($post, $perms);
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/restrictChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date".$permessi;
-    return $this->cURL($url);
+    return $this->cURL('/restrictChatMember',$post);
+
   }
 
-  public function promoteChatMember($chat_id,$user_id,$perms = false){
+  public function promoteChatMember($chat_id,$user_id,$perms = []){
 
-    if($until_date == false){
-      $until_date = 0;
-    }
-
-
-    if($perms != false){
-      $permessi = '&permissions='.http_build_query($perms);
-    } else {
-      $permessi = '';
-    }
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/promoteChatMember?chat_id=$chat_id&user_id=$user_id".$permessi.'&until_date='.$until_date;
-    return $this->cURL($url);
+   $post = [
+  'chat_id' => $chat_id,
+  'user_id' => $user_id,
+  ];
+   $post = array_merge($post, $perms);
+    return $this->cURL('/promoteChatMember',$post);
   }
 
   public function exportChatInviteLink($chat_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/exportChatInviteLink?chat_id=$chat_id";
-    return $this->cURL($url);
+
+    $post = [
+      'chat_id' => $chat_id
+    ];
+
+    return $this->cURL('/exportChatInviteLink',$post);
+
   }
 
   public function unbanChatMember($chat_id,$user_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/unbanChatMember?chat_id=$chat_id&user_id=$user_id";
-    return $this->cURL($url);
+    $post = [
+      'chat_id' => $chat_id,
+      'user_id' => $user_id
+    ];
+    return $this->cURL('/unbanChatMember',$post);
   }
 
   public function kickChatMember($chat_id,$user_id,$until_date = false){
     if($until_date == false){
       $until_date = 0;
     }
-    $url = 'https://api.telegram.org/bot'.$this->bot."/kickChatMember?chat_id=$chat_id&user_id=$user_id&until_date=$until_date";
-    return $this->cURL($url);
+    $post = [
+      'chat_id' => $chat_id,
+      'user_id' => $user_id,
+      'until_date' => $until_date
+    ];
+    return $this->cURL('/kickChatMember',$post);
   }
 
-  public function setChatTitle($user_id,$title){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/setChatTitle?chat_id=$user_id&title=$title";
-    return $this->cURL($url);
+  public function setChatTitle($chat_id,$title){
+    $post = [
+      'chat_id' => $chat_id,
+      'title' => $title
+    ];
+    return $this->cURL('/setChatTitle',$post);
   }
 
-  public function setChatDescription($chat_id,$description = false){
+  public function setChatDescription($chat_id,$description = ''){
 
-    if($description == false){
-      $description = '';
-    } else {
-      $description = '&description='.$description;
-    }
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/setChatDescription?chat_id=$chat_id".$description;
-    return $this->cURL($url);
+  $post = [
+  'chat_id' => $chat_id,
+  'description' => $description
+  ];
+    return $this->cURL('/setChatDescription',$post);
   }
 
   public function sendChatAction($user_id,$action){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendChatAction?chat_id=$user_id&action=$action";
-    return $this->cURL($url);
+
+    $post = [
+      'user_id' => $user_id,
+      'action' => $action
+    ];
+    
+    return $this->cURL('/sendChatAction',$post);
+
   }
 
-  public function forwardMessage($from_chat_id,$user_id,$message_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/forwardMessage?from_chat_id=$from_chat_id&chat_id=$user_id&message_id=$message_id";
-    return $this->cURL($url);
+  public function forwardMessage($from_chat_id,$user_id,$message_id,$disable_notification = false){
+
+    $post = [
+      'chat_id' => $user_id,
+      'from_chat_id' => $from_chat_id,
+      'message_id' => $message_id,
+      'disable_notification' => $disable_notification
+    ];
+
+    return $this->cURL('/forwardMessage',$post);
+
   }
 
-  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false, $disableWebPagePreview = true){
+  public function sendMessage($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = 'HTML', $disableWebPagePreview = true){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
-            $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
         } else if($type == 'inline'){
-            $rm = '&reply_markup={"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
+    }  else if($forceReply == true){
+      $rm = '{"force_reply":true}';
     } else {
       $rm = '';
     }
 
     if($risposta == false){
       $risposta = '';
-    } else {
-      $risposta = '&reply_to_message_id='.$risposta;
     }
 
-    if($parse_mode == false){
-      $parse_mode = '&parse_mode=HTML';
-    } else {
-      $parse_mode = '&parse_mode='.$parse_mode;
-    }
+    $post = [
+      'chat_id' => $user_id,
+      'text' => $text,
+      'parse_mode' => $parse_mode,
+      'disable_web_page_preview=' => $disableWebPagePreview,
+      'reply_markup' => $rm,
+      'reply_to_message_id' => $risposta,
+      'disable_notification' => $notifica,
+    ];
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMessage?chat_id=$user_id&text=" . urlencode($text) . $parse_mode . '&disable_web_page_preview=' . $disableWebPagePreview . $rm . $risposta . '&force_reply=' . $forceReply . '&disable_notification=' . $notifica . '&force_reply=' . $forceReply;
-    return $this->cURL($url);
+    return $this->cURL('/sendMessage',$post);
+
   }
 
-  public function sendMessage2($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = false, $disableWebPagePreview = true){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
+  public function sendMessage2($user_id, $text, $keyboard = false, $type = false, $risposta = false, $forceReply = false, $notifica = false, $parse_mode = 'HTML', $disableWebPagePreview = true){ #ATTENZIONE, può essere usato solo una volta nel file, e non restituisce alcun output
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -354,38 +380,63 @@ class Bot {
         } else if($type == 'inline'){
             $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
         }
+    }   else if($forceReply == true){
+      $rm = '{"force_reply":"true"}';
     } else {
       $rm = '';
     }
 
-    if($parse_mode == false){
-      $parse_mode = 'HTML';
-    }
-
     header('Content-Type: application/json');
 
-    $parameters = array(
+    $parameters = [
       'chat_id' => $user_id,
       'method' => 'sendMessage',
       'disable_notification' => $notifica,
-      'force_reply' => $forceReply,
       'reply_to_message_id' => $risposta,
       'reply_markup' => $rm,
       'parse_mode' => $parse_mode,
       'text' => $text,
       'disable_web_page_preview' => $disableWebPagePreview
-    );
+    ];
 
     echo json_encode($parameters, TRUE);
 
   }
 
-  public function sendSticker($user_id,$sticker){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendSticker?chat_id=$user_id&sticker=$sticker";
-    return $this->cURL($url);
+  public function getStickerSet($name){
+
+    $post = [
+      'name' => $name
+    ];
+
+    return $this->cURL('/getStickerSet',$post);
+
   }
 
-  public function sendPhoto($user_id, $photo, $caption = false, $keyboard = false, $type = false, $file_id = true){
+  public function uploadStickerFile($user_id, $png_sticker){
+
+    $ch = curl_init();
+  
+    $png_sticker = new CURLFile($png_sticker);
+
+    $post = [
+      'chat_id' => $user_id,
+      'png_sticker' => $png_sticker
+    ];
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:multipart/form-data']);
+    curl_setopt($ch, CURLOPT_URL, 'https://api.telegram.org/bot'.$this->bot.'/uploadStickerFile');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $output = curl_exec($ch);
+    curl_close($ch);
+  
+    return json_decode($output, TRUE);
+    
+  }
+
+  public function sendSticker($user_id,$sticker, $keyboard = false, $type = false, $reply_to_message_id = false, $disable_notification = false, $forceReply = false){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -397,8 +448,33 @@ class Bot {
       $rm = '';
     }
 
-    if($caption == false){
-      $caption = '';
+    if($reply_to_message_id == false){
+      $reply_to_message_id = '';
+    }
+
+    $post = [
+      'chat_id' => $user_id,
+      'sticker' => $sticker,
+      'disable_notification' => $disable_notification,
+      'reply_markup' => $rm,
+      'reply_to_message_id' => $reply_to_message_id,
+      'force_reply' => $forceReply
+    ];
+    
+    return $this->cURL('/sendSticker',$post);
+    
+  }
+
+  public function sendPhoto($user_id, $photo, $caption = '', $keyboard = false, $type = false, $file_id = true){
+
+    if ($keyboard != false) {
+        if ($type == 'fisica') {
+            $rm = '{"keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        } else if($type == 'inline'){
+            $rm = '{"inline_keyboard":['.$keyboard.'],"resize_keyboard":true}';
+        }
+    } else {
+      $rm = '';
     }
 
     $ch = curl_init();
@@ -428,44 +504,46 @@ class Bot {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
     $output = curl_exec($ch);
     curl_close($ch);
+
     return json_decode($output, TRUE);
-    }
 
-  public function sendAudio($user_id,$audio,$caption = false){
+  }
 
-    if($caption == false){
-      $caption = '';
-    } else {
-      $caption = '&caption='.urlencode($caption);
-    }
+  public function sendAudio($user_id,$audio,$caption = ''){
 
+    $post = [
+     'chat_id' => $user_id,
+     'audio' => $audio,
+     'caption' => $caption
+    ];
+   
+    return $this->cURL('/sendAudio', $post);
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendAudio?chat_id=$user_id&audio=".urlencode($audio).$caption;
-    return $this->cURL($url);
-    }
+  }
 
   public function sendVideo($user_id,$video,$caption = false){
 
-    if($caption == false){
-      $caption = '';
-    } else {
-      $caption = '&caption='.urlencode($caption);
-    }
+    $post = [
+      'chat_id' => $user_id,
+      'video' => $video,
+      'caption' => $caption
+    ];
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendVideo?chat_id=$user_id&video=$video".$caption;
-    return $this->cURL($url);
-    }
+    return $this->cURL('/sendVideo', $post);
+    
+  }
 
-  public function sendMediaGroup($user_id,$album,$caption = false){
+  public function sendMediaGroup($user_id,$album,$caption = ''){
+    
+      
+    $post = [
+      'chat_id' => $user_id,
+      'media' => json_encode($album),
+      'caption' => $caption,
+    ];
+      
+    return $this->cURL('/sendMediaGroup',$post);
 
-      if($caption == false){
-        $caption = '';
-      } else {
-        $caption = '&caption='.urlencode($caption);
-      }
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendMediaGroup?chat_id=$user_id&media=$album".$caption;
-    return $this->cURL($url);
   }
 
   public function sendDocument($user_id, $document, $file_id = true, $caption = false, $parse_mode = false){
@@ -507,63 +585,69 @@ class Bot {
     return json_decode($output, TRUE);
   }
 
-  public function sendVoice($user_id,$voice,$caption = false){
+  public function sendVoice($user_id,$voice,$caption = ''){ #da aggiungere l'upload dei file
 
-    if($caption == false){
-      $caption = '';
-    } else {
-      $caption = '&caption='.urlencode($caption);
-    }
+    $post = [
+      'chat_id' => $user_id,
+      'voice' => $voice,
+      'caption' => $caption
+    ];
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendVoice?chat_id=$user_id&voice=".urlencode($voice);
-    return $this->cURL($url);
+    return $this->cURL('/sendVoice',$post);
+
   }
 
-  public function sendAnimation($user_id,$animation,$caption = false){
+  public function sendAnimation($user_id,$animation,$caption = ''){
+    
+    $post = [
+      'chat_id' => $user_id,
+      'animation' => $animation,
+      'caption' => $caption
+    ];
 
-    if($caption == false){
-      $caption = '';
-    } else {
-        $caption = '&caption='.urlencode($caption);
-    }
+    return $this->cURL('/sendAnimation',$post);
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/sendAnimation?chat_id=$user_id&animation=".urlencode($animation);
-    return $this->cURL($url);
   }
 
   public function answerCallbackQuery($callback_query_id,$text,$show_alert = true){
 
-    if($show_alert == true){
-      $show_alert = '&show_alert=true';
-    } else {
-      $show_alert = '&show_alert=false';
-    }
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/answerCallbackQuery?callback_query_id=$callback_query_id&text=".urlencode($text).$show_alert;
-    return $this->cURL($url);
+    $post = [
+      'callback_query_id' => $callback_query_id,
+      'text' => $text,
+      'show_alert' => $show_alert
+    ];
+    
+    return $this->cURL('/answerCallbackQuery', $post);
+    
   }
 
-  public function editMessageText($user_id, $message_id, $newText, $keyboard = false, $type = false, $parse_mode = false, $disableWebPagePreview = true){
-
+  public function editMessageText($user_id, $message_id, $text, $keyboard = false, $type = false, $parse_mode = 'HTML', $disableWebPagePreview = true){
+        
     if ($keyboard != false) {
-        if ($type == 'fisica') {
-            $rm = '&reply_markup={"keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
-        } else if($type == 'inline'){
-            $rm = '&reply_markup={"inline_keyboard":['.urlencode($keyboard).'],"resize_keyboard":true}';
+            if ($type == 'fisica') {
+                $rm = '{"keyboard":[' . $keyboard . '],"resize_keyboard":true}';
+            }
+            else if ($type == 'inline') {
+                $rm = '{"inline_keyboard":[' . $keyboard . '],"resize_keyboard":true}';
+            }
         }
-    } else {
-      $rm = '';
-    }
+        else {
+            $rm = '';
+        }
+    $post = [
+      'chat_id' => $user_id,
+      'message_id' => $message_id,
+      'text' => $text,
+      'disable_web_page_preview' => $disableWebPagePreview,
+      'parse_mode' => $parse_mode,
+      'reply_markup' => $rm
+    ];
+    
+    return $this->cURL('/editMessageText', $post);
 
-    if($parse_mode == false){
-      $parse_mode = 'HTML';
-    }
-
-    $url = 'https://api.telegram.org/bot'.$this->bot."/editMessageText?chat_id=$user_id&message_id=$message_id&text=".urlencode($newText) . '&disable_web_page_preview=' . $disableWebPagePreview . '&parse_mode=' . $parse_mode . $rm;
-    return $this->cURL($url);
   }
 
-  public function editMessageText2($user_id, $message_id, $newText, $keyboard = false, $type = false, $parse_mode = false, $disableWebPagePreview = true){
+  public function editMessageText2($user_id, $message_id, $newText, $keyboard = false, $type = false, $parse_mode = 'HTML', $disableWebPagePreview = true){
 
     if ($keyboard != false) {
         if ($type == 'fisica') {
@@ -574,14 +658,10 @@ class Bot {
     } else {
       $rm = '';
     }
-
-    if($parse_mode == false){
-      $parse_mode = 'HTML';
-    }
-
+    
     header('Content-Type: application/json');
 
-    $parameters = array(
+    $parameters = [
       'chat_id' => $user_id,
       'message_id' => $message_id,
       'method' => 'editMessageText',
@@ -589,25 +669,30 @@ class Bot {
       'text' => $newText,
       'disable_web_page_preview' => $disableWebPagePreview,
       'reply_markup' => $rm
-    );
+    ];
 
     echo json_encode($parameters, TRUE);
 
   }
 
   public function leaveChat($chat_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/leaveChat?chat_id=$chat_id";
-    return $this->cURL($url);
+
+    $post = [
+      'chat_id' => $chat_id
+    ];
+    
+    return $this->cURL('/leaveChat', $post);
+
   }
 
   public function leaveChat2($chat_id){
 
     header('Content-Type: application/json');
 
-    $parameters = array(
-      'chat_id' => $user_id,
+    $parameters = [
+      'chat_id' => $chat_id,
       'method' => 'leaveChat'
-    );
+    ];
 
     echo json_encode($parameters, TRUE);
 
@@ -615,122 +700,132 @@ class Bot {
 
   public function pinChatMessage($chat_id,$message_id,$disable_notification = false){
 
-    if($disable_notification == false){
-      $disable_notification = '&disable_notification=false';
-    } else {
-      $disable_notification = '&disable_notification=true';
-    }
+    $post = [
+      'chat_id' => $chat_id,
+      'message_id' => $message_id,
+      'disable_notification' => $disable_notification
+    ];
 
-    $url = 'https://api.telegram.org/bot'.$this->bot."/pinChatMessage?chat_id=$chat_id&message_id=$message_id&disable_notification=$disable_notification";
-    return $this->cURL($url);
+    return $this->cURL('/pinChatMessage', $post);
+
   }
 
   public function getChat($chat_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/getChat?chat_id=$chat_id";
-    return $this->cURL($url);
+
+    $post = [
+      'chat_id' => $chat_id
+    ];
+
+    return $this->cURL('/getChat', $post);
+    
   }
 
   public function deleteWebhook($token = false){
 
-    if($token == false){
-      $url = 'https://api.telegram.org/bot'.$this->bot.'/deleteWebhook';
-    } else {
-      $url = 'https://api.telegram.org/bot'.$token.'/deleteWebhook';
-    }
+    if(!$token) $token = $this->bot;
 
-    return $this->cURL($url);
+    $post = [
+      'token' => $token
+    ];
+
+    return $this->cURL('/deleteWebhook', $post);
   }
 
-  public function setWebhook($token = false, $url = false, $max_connections = false){
+  public function setWebhook($token = false, $url = '', $max_connections = 40, $allowed_updates = ''){
 
-    if($max_connections == false){
-      $max_connections = '&max_connections=40';
-    } else {
-      $max_connections = '&max_connections='.$max_connections;
-    }
+    if(!$token) $token = $this->bot;
 
-    if($url == false){
-      $url = '';
-    }
+    $post = [
+      'token' => $token,
+      'url' => $url,
+      'max_connections' => $max_connections,
+      'allowed_updates' => $allowed_updates
+    ];
 
-    if($token == false){
-      $url = 'https://api.telegram.org/bot'.$this->bot.'/setWebhook?url='.$url.$max_connections;
-    } else {
-      $url = 'https://api.telegram.org/bot'.$token.'/setWebhook?url='.$url.$max_connections;
-    }
-
-    return $this->cURL($url);
+    return $this->cURL('/setWebhook',$post);
+    
   }
 
   public function getWebhookInfo($token = false){
-
-    if($token == false){
-      $url = 'https://api.telegram.org/bot'.$this->bot.'/getWebhookInfo';
-    } else {
-      $url = 'https://api.telegram.org/bot'.$token.'/getWebhookInfo';
-    }
-
-    return $this->cURL($url);
+    
+    if(!$token) $token = $this->bot;
+    
+    $post = [
+      'token' => $token
+    ];
+    
+    return $this->cURL('/getWebhookInfo',$post);
+    
   }
 
   public function getChatAdministrators($chat_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/getChatAdministrators?chat_id=$chat_id";
-    return $this->cURL($url);
+    
+    $post = [
+      'chat_id' => $chat_id
+    ];
+
+    return $this->cURL('/getChatAdministrators', $post);
+    
   }
 
   public function getChatMembersCount($chat_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMembersCount?chat_id=$chat_id";
-    return $this->cURL($url);
+
+    $post = [
+      'chat_id' => $chat_id
+    ];
+
+    return $this->cURL('/getChatMembersCount',$post);
+    
   }
 
   public function getChatMember($chat_id, $user_id){
-    $url = 'https://api.telegram.org/bot'.$this->bot."/getChatMember?chat_id=$chat_id&user_id=$user_id";
-    return $this->cURL($url);
-  }
-
-  public function gestisciInlineQuery($inlineData,$switchText = false,$switchParameter = false, $cacheTime = false){
-
-             if($switchText == false){
-               $switchText = 'Ritorna al bot';
-             }
-
-             if($switchParameter == false){
-               $switchParameter = 123;
-             }
-
-             if($cacheTime == false){
-               $cacheTime = 0;
-             }
-
-             $risultati = json_encode($inlineData,true);
-             $url = 'https://api.telegram.org/bot'.$this->bot."/answerInlineQuery?inline_query_id=$this->inline_id&results=$risultati&cache_time=$cacheTime&switch_pm_text=$switchText&switch_pm_parameter=$switchParameter";
-             return $this->cURL($url);
-
-             # ESEMPIO DI OGGETTO INLINE
-
-             /*
-             $inlineData=[[
-                 "type" => "article",
-                 "id" => "0 (sarà il primo risultato, se fosse stato 2 appariva dopo l'1 e lo 0, e così via)",
-                 "title" => "Titolo qua",
-                 "input_message_content" => array("message_text" => "Quello che ti pare", "parse_mode" => "HTML (o altro)"),
-                 "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE","url (o callback_data)" => "URL o Callback data")]]),
-                 "description" => "Qua la tua descrizione"
-              ],
-              [
-                  "type" => "article",
-                  "id" => "1",
-                  "title" => "Titolo qua 2",
-                  "input_message_content" => array("message_text" => "Quello che ti pare 2", "parse_mode" => "HTML (o altro)"),
-                  "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE 2","url (o callback_data)" => "URL o Callback data")]]),
-                  "description" => "Qua la tua descrizione 2"
-               ]
-               ];
-
-              */
-
+    $post = [
+      'chat_id' => $chat_id,
+      'user_id' => $user_id
+    ];
+    
+    return $this->cURL('/getChatMember', $post);
 
   }
+
+  public function gestisciInlineQuery($inlineData,$switchText = 'Ritorna al bot', $switchParameter = 123, $cacheTime = 0){
+  
+  $post = [
+    'inline_query_id' => $this->inline_id,
+    'results' => json_encode($inlineData,true),
+    'cache_time' => $cacheTime,
+    'switch_pm_text' => $switchText,
+    'switch_pm_parameter' => $switchParameter
+  ];
+        
+               return $this->cURL('/answerInlineQuery', $post);
+  
+               # ESEMPIO DI OGGETTO INLINE
+  
+               /*
+               $inlineData=[[
+                   "type" => "article",
+                   "id" => "0 (sarà il primo risultato, se fosse stato 2 appariva dopo l'1 e lo 0, e così via)",
+                   "title" => "Titolo qua",
+                   "input_message_content" => array("message_text" => "Quello che ti pare", "parse_mode" => "HTML (o altro)"),
+                   "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE","url (o callback_data)" => "URL o Callback data")]]),
+                   "description" => "Qua la tua descrizione"
+                ],
+                [
+                    "type" => "article",
+                    "id" => "1",
+                    "title" => "Titolo qua 2",
+                    "input_message_content" => array("message_text" => "Quello che ti pare 2", "parse_mode" => "HTML (o altro)"),
+                    "reply_markup" => array("inline_keyboard" => [[array("text" => "TESTO DEL PULSANTE INLINE 2","url (o callback_data)" => "URL o Callback data")]]),
+                    "description" => "Qua la tua descrizione 2"
+                 ]
+                 ];
+  
+                */
+  
+  
+    }
+
 
 } //Fine della classe
 
