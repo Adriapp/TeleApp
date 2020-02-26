@@ -1,10 +1,6 @@
 <?php
 
-# [BETA] - In fase di testing
-
-# Copyright Adriapp, con l'aiuto di tappo03, Nen3one, XDiamond7D7, sonicmaster (Nicola), e J3ckend (Gi4cca)
-
-$Adriano = 588347428;
+$Adriano = 588347428;  # Nel prossimo update questa variabile verrà eliminata
 
 class Bot {
 
