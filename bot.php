@@ -534,7 +534,7 @@ class Bot {
 
     $post = [
       'chat_id' => $user_id,
-      'media' => json_encode($album),
+      'media' => $album,
       'caption' => $caption,
     ];
 
