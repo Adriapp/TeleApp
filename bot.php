@@ -1,10 +1,6 @@
 <?php
 
-# Data creazione framework: 04/09/2019
-
-# Copyright Adriano Palma
-
-$Adriano = 588347428;
+$Adriano = 588347428;  # Nel prossimo update questa variabile verrà eliminata
 
 class Bot {
 
