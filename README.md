@@ -4,19 +4,21 @@ Ciao! Questa repository contiene i file delle funzioni che uso per creare i miei
 
 Sentiti libero di suggerire delle modifiche :D
 
-# Installazione
+## Installazione
 
-<code>sudo apt install git</code><br>
-<code>git clone https://github.com/Adriapp/TeleApp</code>
+`sudo apt install git`
+`git clone https://github.com/Adriapp/TeleApp`
 
-# Getting Started
+## Getting Started
+```php
+<?php
+include 'bot.php';
+$bot = new Bot('TOKEN DEL BOT');
+```
 
-<code>include 'bot.php'; </code> <br>
-<code>$bot = new Bot('TOKEN DEL BOT'); </code>
-
-
-# Il tuo primo comando
-
-<code>if($bot->text == '/start'){</code><br>
-  <code>$bot->sendMessage($bot->user_id,'Funziona!'); </code> <br>
-<code>}</code>
+## Il tuo primo comando
+```php
+if ($bot->text == '/start'){
+ $bot->sendMessage($bot->user_id,'Funziona!');
+ }
+```
