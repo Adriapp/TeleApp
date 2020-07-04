@@ -6,7 +6,7 @@
 
 ## Installazione
 
-`sudo apt install git && git clone <https://github.com/Adriapp/TeleApp>`
+`sudo apt install git && git clone https://github.com/Adriapp/TeleApp`
 
 ## Getting Started
 ```php
