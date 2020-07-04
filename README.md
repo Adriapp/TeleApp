@@ -19,5 +19,5 @@ $bot = new Bot('TOKEN DEL BOT');
 ```php
 if ($bot->text == '/start'){
  $bot->sendMessage($bot->user_id,'Funziona!');
- }
+}
 ```
