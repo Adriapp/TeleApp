@@ -6,13 +6,13 @@ class Bot {
   
   public function __construct($token,$json = false){
 
-    if(isset($json) && $json == false){
+    if($json == false){
       $this->json = file_get_contents('php://input');
+    } else {
+      $this->json = $json;
     }
 
     $this->bot = $token;
-
-    #Variables
 
     $this->update = json_decode($this->json, TRUE);
 
