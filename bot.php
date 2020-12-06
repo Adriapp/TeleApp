@@ -354,7 +354,7 @@ class Bot {
       'chat_id' => $user_id,
       'text' => $text,
       'parse_mode' => $parse_mode,
-      'disable_web_page_preview=' => $disableWebPagePreview,
+      'disable_web_page_preview' => $disableWebPagePreview,
       'reply_markup' => $rm,
       'reply_to_message_id' => $risposta,
       'force_reply' => $forceReply,
