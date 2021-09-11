@@ -313,7 +313,7 @@ class Bot {
   public function sendChatAction($user_id,$action){
 
     $post = [
-      'user_id' => $user_id,
+      'chat_id' => $user_id,
       'action' => $action
     ];
 
