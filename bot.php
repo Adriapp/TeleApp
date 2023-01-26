@@ -1,6 +1,5 @@
 <?php
 
-
 class Bot {
 
   
@@ -203,6 +202,7 @@ class Bot {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $output = curl_exec($ch);
     curl_close($ch);
+    
     return json_decode($output, TRUE);
 
   }
@@ -241,21 +241,25 @@ class Bot {
 
     $post = array_merge($post, $perms);
 
-    return $this->cURL('/restrictChatMember',$post);
+    return $this->cURL('/restrictChatMember', $post);
 
   }
 
-  public function promoteChatMember($chat_id,$user_id,$perms = []){
+  public function promoteChatMember($chat_id, $user_id, $perms = []){
 
     if($until_date == false){
       $until_date = 0;
     }
-   $post = [
-  'chat_id' => $chat_id,
-  'user_id' => $user_id,
-  ];
-   $post = array_merge($post, $perms);
-    return $this->cURL('/promoteChatMember',$post);
+    
+    $post = [
+      'chat_id' => $chat_id,
+      'user_id' => $user_id,
+    ];
+    
+    $post = array_merge($post, $perms);
+  
+    return $this->cURL('/promoteChatMember', $post);
+  
   }
 
   public function exportChatInviteLink($chat_id){
@@ -264,64 +268,88 @@ class Bot {
       'chat_id' => $chat_id
     ];
 
-    return $this->cURL('/exportChatInviteLink',$post);
+    return $this->cURL('/exportChatInviteLink', $post);
 
   }
 
   public function unbanChatMember($chat_id,$user_id){
+    
     $post = [
       'chat_id' => $chat_id,
       'user_id' => $user_id
     ];
-    return $this->cURL('/unbanChatMember',$post);
+  
+    return $this->cURL('/unbanChatMember', $post);
+  
   }
 
-  public function kickChatMember($chat_id,$user_id,$until_date = false){
+  public function kickChatMember($chat_id, $user_id, $until_date = false){
+    
     if($until_date == false){
       $until_date = 0;
     }
+    
     $post = [
       'chat_id' => $chat_id,
       'user_id' => $user_id,
       'until_date' => $until_date
     ];
-    return $this->cURL('/kickChatMember',$post);
+  
+    return $this->cURL('/kickChatMember', $post);
+  
   }
 
-  public function setChatTitle($chat_id,$title){
+  public function setChatTitle($chat_id, $title){
+    
     $post = [
       'chat_id' => $chat_id,
       'title' => $title
     ];
-    return $this->cURL('/setChatTitle',$post);
+    
+    return $this->cURL('/setChatTitle', $post);
+  
   }
 
-  public function setChatDescription($chat_id,$description = false){
+  public function setChatDescription($chat_id, $description = false){
 
     if($description == false){
       $description = '';
     } else {
       $description = $description;
     }
-  $post = [
-  'chat_id' => $chat_id,
-  'description' => $description
-  ];
+    
+    $post = [
+    'chat_id' => $chat_id,
+    'description' => $description
+    ];
+    
     return $this->cURL('/setChatDescription',$post);
+  
   }
 
-  public function sendChatAction($user_id,$action){
+  public function sendChatAction($chat_id, $action){
 
     $post = [
-      'chat_id' => $user_id,
+      'chat_id' => $chat_id,
       'action' => $action
     ];
 
     return $this->cURL('/sendChatAction',$post);
 
   }
+  
+  public function revokeChatInviteLink($chat_id, $invite_link){
 
-  public function forwardMessage($from_chat_id,$user_id,$message_id,$disable_notification = false){
+    $post = [
+      'chat_id' => $chat_id,
+      'invite_link' => $invite_link
+    ];
+
+    return $this->cURL('/revokeChatInviteLink', $post);
+
+  }
+
+  public function forwardMessage($from_chat_id, $user_id, $message_id, $disable_notification = false){
 
     $post = [
       'chat_id' => $user_id,
@@ -330,7 +358,7 @@ class Bot {
       'disable_notification' => $disable_notification
     ];
 
-    return $this->cURL('/forwardMessage',$post);
+    return $this->cURL('/forwardMessage', $post);
 
   }
 
@@ -361,7 +389,7 @@ class Bot {
       'disable_notification' => $notifica,
     ];
 
-    return $this->cURL('/sendMessage',$post);
+    return $this->cURL('/sendMessage', $post);
 
   }
 
@@ -401,7 +429,7 @@ class Bot {
       'name' => $name
     ];
 
-    return $this->cURL('/getStickerSet',$post);
+    return $this->cURL('/getStickerSet', $post);
 
   }
 
@@ -813,6 +841,7 @@ class Bot {
   }
 
   public function getChatMember($chat_id, $user_id){
+    
     $post = [
       'chat_id' => $chat_id,
       'user_id' => $user_id
@@ -824,16 +853,17 @@ class Bot {
 
   public function gestisciInlineQuery($inlineData,$switchText = 'Ritorna al bot', $switchParameter = 123, $cacheTime = 0){
 
-  $post = [
-    'inline_query_id' => $this->inline_id,
-    'results' => json_encode($inlineData,true),
-    'cache_time' => $cacheTime,
-    'switch_pm_text' => $switchText,
-    'switch_pm_parameter' => $switchParameter
-  ];
+    $post = [
+      'inline_query_id' => $this->inline_id,
+      'results' => json_encode($inlineData,true),
+      'cache_time' => $cacheTime,
+      'switch_pm_text' => $switchText,
+      'switch_pm_parameter' => $switchParameter
+    ];
 
-               return $this->cURL('/answerInlineQuery', $post);
-    }
+    return $this->cURL('/answerInlineQuery', $post);
+  
+  }
 
 
 }
