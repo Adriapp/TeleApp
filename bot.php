@@ -1,7 +1,6 @@
 <?php
 
 class Bot {
-
   
   public function __construct($token,$json = false){
 
