@@ -6,7 +6,7 @@
 *
 * Official guide: https://core.telegram.org/bots/self-signed
 *
-* Usage: user@hostname:~$ php setWebhook.php /path/to/selfsigned-certificate.crt BOT_TOKEN_HERE IP_ADDRESS_OR_DOMAIN_HERE/path/to/bot.php
+* Usage: user@adenela:~$ php setWebhook.php /path/to/selfsigned-certificate.crt BOT_TOKEN_HERE IP_ADDRESS_OR_DOMAIN_HERE/path/to/bot.php
 *
 * Example: hitori@bocchi:~$ php setWebhook.php /etc/ssl/certs/selfsigned-nginx.crt 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11 12.34.56.78/telegram/bots/myawesomebot/index.php
 *
