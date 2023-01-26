@@ -17,4 +17,4 @@ curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
 $output = curl_exec($ch);
 curl_close($ch);
-exit($output);
+exit($output.PHP_EOL);
