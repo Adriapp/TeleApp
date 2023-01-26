@@ -721,6 +721,25 @@ class Bot {
 
     return $this->cURL('/deleteWebhook', $post);
   }
+  
+  public function setChatStickerSet($chat_id, $sticker_set_name){
+   
+    $post = [
+      'chat_id' => $chat_id,
+      'sticker_set_name' => $sticker_set_name
+    ];
+    
+    return $this->cURL('/setChatStickerSet', $post);
+  }
+  
+  public function deleteChatStickerSet($chat_id){
+   
+    $post = [
+      'chat_id' => $chat_id
+    ];
+    
+    return $this->cURL('/deleteChatStickerSet', $post);
+  }
 
   public function setWebhook($token = false, $url = '', $max_connections = 40, $allowed_updates = ''){
 
