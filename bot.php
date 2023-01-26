@@ -720,6 +720,7 @@ class Bot {
     ];
 
     return $this->cURL('/deleteWebhook', $post);
+    
   }
   
   public function setChatStickerSet($chat_id, $sticker_set_name){
@@ -730,6 +731,7 @@ class Bot {
     ];
     
     return $this->cURL('/setChatStickerSet', $post);
+  
   }
   
   public function deleteChatStickerSet($chat_id){
@@ -739,6 +741,28 @@ class Bot {
     ];
     
     return $this->cURL('/deleteChatStickerSet', $post);
+    
+  }
+  
+  public function unpinChatMessage($chat_id, $message_id = false){
+   
+    $post = [
+      'chat_id' => $chat_id,
+      'message_id' => $message_id
+    ];
+    
+    return $this->cURL('/unpinChatMessage', $post);
+  
+  }
+  
+  public function unpinAllChatMessages($chat_id){
+   
+    $post = [
+      'chat_id' => $chat_id
+    ];
+    
+    return $this->cURL('/unpinAllChatMessages', $post);
+    
   }
 
   public function setWebhook($token = false, $url = '', $max_connections = 40, $allowed_updates = ''){
