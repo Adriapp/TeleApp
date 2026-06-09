@@ -1,9 +1,6 @@
 # TeleApp
 
-[![License: MIT](https://img.shields.io/github/license/Adriapp/TeleApp)](https://github.com/Adriapp/TeleApp/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/Adriapp/TeleApp)](https://github.com/Adriapp/TeleApp/issues)
-[![GitHub stars](https://img.shields.io/github/stars/Adriapp/TeleApp)](https://github.com/Adriapp/TeleApp/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Adriapp/TeleApp)](https://github.com/Adriapp/TeleApp/network)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Adriapp/TeleApp/blob/master/LICENSE)
 
 > **[Leggi la documentazione in Italiano](README_IT.md)**
 
