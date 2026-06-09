@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeleApp - PHP Telegram Bot Framework</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2e3347;--text:#e4e6f0;--text2:#9da3b7;--accent:#3b82f6;--accent2:#60a5fa;--green:#22c55e;--purple:#a78bfa;--orange:#fb923c;--code-bg:#1e2231}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{color:var(--accent2);text-decoration:none;transition:color .2s}
+a:hover{color:var(--accent)}
+.container{max-width:960px;margin:0 auto;padding:0 24px}
+
+/* Header */
+.hero{background:linear-gradient(135deg,#1a1d27 0%,#1e293b 50%,#172035 100%);border-bottom:1px solid var(--border);padding:80px 0 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(59,130,246,.06) 0%,transparent 50%);pointer-events:none}
+.hero h1{font-size:3.2rem;font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.hero h1 span{background:linear-gradient(135deg,var(--accent2),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--text2);max-width:560px;margin:0 auto 28px}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.badges img{height:22px}
+.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;font-size:.95rem;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#2563eb;color:#fff}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent2)}
+
+/* Language Toggle */
+.lang-toggle{position:fixed;top:16px;right:16px;z-index:100;display:flex;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.lang-btn{padding:8px 16px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);transition:all .2s}
+.lang-btn.active{background:var(--accent);color:#fff}
+.lang-btn:hover:not(.active){color:var(--text)}
+
+/* Navigation */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(26,29,39,.9)}
+nav .container{display:flex;gap:20px;overflow-x:auto;justify-content:center;flex-wrap:wrap}
+nav a{color:var(--text2);font-size:.85rem;font-weight:500;white-space:nowrap;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s}
+nav a:hover{color:var(--text);border-color:var(--accent)}
+
+/* Sections */
+section{padding:56px 0;border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:none}
+h2{font-size:1.8rem;font-weight:700;margin-bottom:24px;letter-spacing:-.5px}
+h2 span{color:var(--accent2)}
+h3{font-size:1.2rem;font-weight:600;margin:28px 0 12px;color:var(--purple)}
+h4{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--orange)}
+
+/* Cards */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{margin:0 0 8px;color:var(--text);font-size:1.05rem}
+.card p{color:var(--text2);font-size:.9rem;margin:0}
+.card code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:.85rem;color:var(--accent2)}
+
+/* Tables */
+.table-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--surface2);padding:10px 14px;text-align:left;font-weight:600;color:var(--text2);font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+td{padding:10px 14px;border-top:1px solid var(--border)}
+tr:hover td{background:rgba(59,130,246,.03)}
+td code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:.83rem;color:var(--green)}
+
+/* Code blocks */
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:18px;overflow-x:auto;margin:14px 0;font-size:.87rem;line-height:1.6}
+code{font-family:'JetBrains Mono','Fira Code',Consolas,monospace}
+.inline-code{background:var(--code-bg);padding:2px 7px;border-radius:4px;font-size:.87rem;color:var(--green)}
+
+/* Steps */
+.steps{counter-reset:step}
+.step{counter-increment:step;padding-left:48px;position:relative;margin-bottom:20px}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:32px;height:32px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+.step h4{margin:0 0 6px;color:var(--text);font-size:1rem}
+.step p{color:var(--text2);font-size:.9rem}
+
+/* Footer */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--text2);font-size:.85rem}
+footer a{color:var(--accent2)}
+
+/* Responsive */
+@media(max-width:640px){
+.hero{padding:48px 0 40px}
+.hero h1{font-size:2rem}
+h2{font-size:1.4rem}
+.lang-toggle{top:auto;bottom:16px;right:50%;transform:translateX(50%)}
+}
+
+/* Utility */
+.mt-sm{margin-top:12px}
+.mb-sm{margin-bottom:12px}
+[data-lang]{display:none}
+[data-lang].visible{display:block}
+</style>
+</head>
+<body>
+
+<!-- Language Toggle -->
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLang('en')">EN</button>
+<button class="lang-btn" onclick="setLang('it')">IT</button>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+<div class="container">
+<div class="badges">
+<img alt="License" src="https://img.shields.io/github/license/Adriapp/TeleApp">
+<img alt="Stars" src="https://img.shields.io/github/stars/Adriapp/TeleApp">
+<img alt="Forks" src="https://img.shields.io/github/forks/Adriapp/TeleApp">
+<img alt="Issues" src="https://img.shields.io/github/issues/Adriapp/TeleApp">
+</div>
+<h1><span>TeleApp</span></h1>
+<div data-lang="en" class="visible">
+<p>A lightweight PHP framework for building Telegram bots. Object-oriented wrapper around the Telegram Bot API.</p>
+</div>
+<div data-lang="it">
+<p>Un framework PHP leggero per creare bot Telegram. Wrapper ad oggetti per la Telegram Bot API.</p>
+</div>
+<div class="hero-buttons">
+<a href="https://github.com/Adriapp/TeleApp" class="btn btn-primary">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+GitHub
+</a>
+<a href="#quick-start" class="btn btn-secondary" data-lang="en" style="display:inline-flex">Get Started</a>
+<a href="#quick-start" class="btn btn-secondary" data-lang="it">Inizia Ora</a>
+</div>
+</div>
+</header>
+
+<!-- NAV -->
+<nav>
+<div class="container" data-lang="en" class="visible">
+<a href="#structure">Structure</a>
+<a href="#requirements">Requirements</a>
+<a href="#setup">Setup</a>
+<a href="#quick-start">Quick Start</a>
+<a href="#properties">Properties</a>
+<a href="#methods">Methods</a>
+<a href="#examples">Examples</a>
+</div>
+<div class="container" data-lang="it">
+<a href="#structure">Struttura</a>
+<a href="#requirements">Requisiti</a>
+<a href="#setup">Configurazione</a>
+<a href="#quick-start">Guida Rapida</a>
+<a href="#properties">Proprieta'</a>
+<a href="#methods">Metodi</a>
+<a href="#examples">Esempi</a>
+</div>
+</nav>
+
+<!-- STRUCTURE -->
+<section id="structure">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Repository <span>Structure</span></h2>
+</div>
+<div data-lang="it">
+<h2>Struttura del <span>Repository</span></h2>
+</div>
+<div class="card-grid">
+<div class="card">
+<h3><code>bot.php</code></h3>
+<div data-lang="en" class="visible"><p>Main Bot class. OOP wrapper for the Telegram Bot API. Parses incoming updates and provides methods for all API interactions.</p></div>
+<div data-lang="it"><p>Classe principale Bot. Wrapper OOP per la Telegram Bot API. Analizza gli update in entrata e fornisce metodi per tutte le interazioni API.</p></div>
+</div>
+<div class="card">
+<h3><code>setWebhook.php</code></h3>
+<div data-lang="en" class="visible"><p>CLI utility for configuring the webhook when using self-signed SSL certificates.</p></div>
+<div data-lang="it"><p>Utility da riga di comando per configurare il webhook con certificati SSL self-signed.</p></div>
+</div>
+<div class="card">
+<h3><code>LICENSE</code></h3>
+<div data-lang="en" class="visible"><p>MIT License. Free to use, modify, distribute and sell with attribution.</p></div>
+<div data-lang="it"><p>Licenza MIT. Libero uso, modifica, distribuzione e vendita con attribuzione.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- REQUIREMENTS -->
+<section id="requirements">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Requirements</h2>
+<div class="card-grid">
+<div class="card"><h3>PHP + cURL</h3><p>PHP with the cURL extension enabled.</p></div>
+<div class="card"><h3>HTTPS Server</h3><p>A web server with HTTPS (required by Telegram).</p></div>
+<div class="card"><h3>Bot Token</h3><p>A Telegram Bot API token from <a href="https://t.me/BotFather">@BotFather</a>.</p></div>
+</div>
+</div>
+<div data-lang="it">
+<h2>Requisiti</h2>
+<div class="card-grid">
+<div class="card"><h3>PHP + cURL</h3><p>PHP con l'estensione cURL abilitata.</p></div>
+<div class="card"><h3>Server HTTPS</h3><p>Un web server con HTTPS (richiesto da Telegram).</p></div>
+<div class="card"><h3>Token Bot</h3><p>Un token API Telegram Bot da <a href="https://t.me/BotFather">@BotFather</a>.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SETUP -->
+<section id="setup">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2><span>Installation</span> &amp; Setup</h2>
+<h3>Installation</h3>
+<pre><code>git clone https://github.com/Adriapp/TeleApp</code></pre>
+<h3>Configuration Steps</h3>
+<div class="steps">
+<div class="step"><h4>Create a bot on Telegram</h4><p>Open Telegram, search for <a href="https://t.me/BotFather">@BotFather</a>, send <code>/newbot</code> and follow the instructions. You'll receive an API token.</p></div>
+<div class="step"><h4>Create your bot file</h4><p>Create a PHP file on your HTTPS server:</p>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('YOUR_BOT_TOKEN');
+
+// Your bot logic here</code></pre>
+</div>
+<div class="step"><h4>Set the webhook</h4><p>Via PHP code:</p>
+<pre><code>$bot-&gt;setWebhook(false, 'https://yourdomain.com/path/to/index.php');</code></pre>
+<p class="mt-sm">Or via CLI with a self-signed certificate:</p>
+<pre><code>php setWebhook.php /path/to/cert.crt BOT_TOKEN domain.com/path/to/bot.php</code></pre>
+</div>
+</div>
+</div>
+<div data-lang="it">
+<h2><span>Installazione</span> e Configurazione</h2>
+<h3>Installazione</h3>
+<pre><code>git clone https://github.com/Adriapp/TeleApp</code></pre>
+<h3>Passi di Configurazione</h3>
+<div class="steps">
+<div class="step"><h4>Crea un bot su Telegram</h4><p>Apri Telegram, cerca <a href="https://t.me/BotFather">@BotFather</a>, invia <code>/newbot</code> e segui le istruzioni. Riceverai un token API.</p></div>
+<div class="step"><h4>Crea il file del bot</h4><p>Crea un file PHP sul tuo server con HTTPS:</p>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('TOKEN_DEL_TUO_BOT');
+
+// La logica del tuo bot qui</code></pre>
+</div>
+<div class="step"><h4>Imposta il webhook</h4><p>Via codice PHP:</p>
+<pre><code>$bot-&gt;setWebhook(false, 'https://tuodominio.com/percorso/index.php');</code></pre>
+<p class="mt-sm">Oppure via CLI con certificato self-signed:</p>
+<pre><code>php setWebhook.php /percorso/cert.crt TOKEN_BOT dominio.com/percorso/bot.php</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- QUICK START -->
+<section id="quick-start">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Quick <span>Start</span></h2>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('YOUR_BOT_TOKEN');
+
+if ($bot-&gt;text == '/start') {
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Hello! The bot is working!');
+}</code></pre>
+</div>
+<div data-lang="it">
+<h2>Guida <span>Rapida</span></h2>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('TOKEN_DEL_TUO_BOT');
+
+if ($bot-&gt;text == '/start') {
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Ciao! Il bot funziona!');
+}</code></pre>
+</div>
+</div>
+</section>
+
+<!-- PROPERTIES -->
+<section id="properties">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Bot <span>Properties</span></h2>
+<p class="mb-sm" style="color:var(--text2)">When a Telegram update is received, the Bot constructor automatically parses the JSON and populates these properties.</p>
+
+<h3>User Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;user_id</code></td><td>int</td><td>Sender's Telegram user ID</td></tr>
+<tr><td><code>$bot-&gt;nome</code></td><td>string</td><td>User's first name</td></tr>
+<tr><td><code>$bot-&gt;cognome</code></td><td>string</td><td>User's last name</td></tr>
+<tr><td><code>$bot-&gt;username</code></td><td>string</td><td>Telegram username</td></tr>
+<tr><td><code>$bot-&gt;lingua</code></td><td>string</td><td>Language code (e.g. <code>it</code>, <code>en</code>)</td></tr>
+<tr><td><code>$bot-&gt;is_bot</code></td><td>bool</td><td>Whether the sender is a bot</td></tr>
+</table></div>
+
+<h3>Chat Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;chat_id</code></td><td>int</td><td>Chat ID</td></tr>
+<tr><td><code>$bot-&gt;tipo_chat</code></td><td>string</td><td>Chat type: private, group, supergroup, channel</td></tr>
+<tr><td><code>$bot-&gt;nome_chat</code></td><td>string</td><td>Chat name/title</td></tr>
+<tr><td><code>$bot-&gt;username_chat</code></td><td>string</td><td>Chat username</td></tr>
+</table></div>
+
+<h3>Message Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;text</code></td><td>string</td><td>Message text</td></tr>
+<tr><td><code>$bot-&gt;message_id</code></td><td>int</td><td>Message ID</td></tr>
+<tr><td><code>$bot-&gt;update_id</code></td><td>int</td><td>Update ID</td></tr>
+<tr><td><code>$bot-&gt;time</code></td><td>int</td><td>Timestamp (Unix)</td></tr>
+<tr><td><code>$bot-&gt;edit</code></td><td>bool</td><td>True if the message was edited</td></tr>
+<tr><td><code>$bot-&gt;entities</code></td><td>array</td><td>Message entities (mentions, hashtags, URLs)</td></tr>
+</table></div>
+
+<h3>Media Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;foto</code></td><td>string</td><td>Photo file_id</td></tr>
+<tr><td><code>$bot-&gt;didascalia</code></td><td>string</td><td>Caption</td></tr>
+<tr><td><code>$bot-&gt;file</code></td><td>string</td><td>Document file_id</td></tr>
+<tr><td><code>$bot-&gt;nome_file</code></td><td>string</td><td>File name</td></tr>
+<tr><td><code>$bot-&gt;tipo_file</code></td><td>string</td><td>MIME type</td></tr>
+<tr><td><code>$bot-&gt;video</code></td><td>string</td><td>Video file_id</td></tr>
+<tr><td><code>$bot-&gt;gif</code></td><td>string</td><td>Animation file_id</td></tr>
+<tr><td><code>$bot-&gt;sticker</code></td><td>string</td><td>Sticker file_id</td></tr>
+</table></div>
+
+<h3>Callback Query Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;callback_query_id</code></td><td>string</td><td>Callback query ID</td></tr>
+<tr><td><code>$bot-&gt;callback_user_id</code></td><td>int</td><td>User who clicked</td></tr>
+<tr><td><code>$bot-&gt;callback_data</code></td><td>string</td><td>Button callback data</td></tr>
+<tr><td><code>$bot-&gt;callback_message_id</code></td><td>int</td><td>Message ID</td></tr>
+<tr><td><code>$bot-&gt;callback_chat_id</code></td><td>int</td><td>Chat ID</td></tr>
+<tr><td><code>$bot-&gt;callback_text</code></td><td>string</td><td>Message text</td></tr>
+</table></div>
+
+<h3>Inline Query Properties</h3>
+<div class="table-wrap"><table>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>$bot-&gt;inline_id</code></td><td>string</td><td>Inline query ID</td></tr>
+<tr><td><code>$bot-&gt;inline_user_id</code></td><td>int</td><td>User ID</td></tr>
+<tr><td><code>$bot-&gt;inline_query</code></td><td>string</td><td>Query text</td></tr>
+<tr><td><code>$bot-&gt;inline_offset</code></td><td>string</td><td>Pagination offset</td></tr>
+</table></div>
+
+<p class="mt-sm" style="color:var(--text2)">For the complete list of all properties (forwarded messages, replies, new members, channels), see the <a href="https://github.com/Adriapp/TeleApp/blob/master/README.md#bot-properties">full documentation on GitHub</a>.</p>
+</div>
+
+<div data-lang="it">
+<h2><span>Proprieta'</span> del Bot</h2>
+<p class="mb-sm" style="color:var(--text2)">Quando viene ricevuto un update da Telegram, il costruttore Bot analizza automaticamente il JSON e popola queste proprieta'.</p>
+
+<h3>Proprieta' Utente</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;user_id</code></td><td>int</td><td>ID utente Telegram del mittente</td></tr>
+<tr><td><code>$bot-&gt;nome</code></td><td>string</td><td>Nome dell'utente</td></tr>
+<tr><td><code>$bot-&gt;cognome</code></td><td>string</td><td>Cognome dell'utente</td></tr>
+<tr><td><code>$bot-&gt;username</code></td><td>string</td><td>Username Telegram</td></tr>
+<tr><td><code>$bot-&gt;lingua</code></td><td>string</td><td>Codice lingua (es. <code>it</code>, <code>en</code>)</td></tr>
+<tr><td><code>$bot-&gt;is_bot</code></td><td>bool</td><td>Se il mittente e' un bot</td></tr>
+</table></div>
+
+<h3>Proprieta' Chat</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;chat_id</code></td><td>int</td><td>ID della chat</td></tr>
+<tr><td><code>$bot-&gt;tipo_chat</code></td><td>string</td><td>Tipo: private, group, supergroup, channel</td></tr>
+<tr><td><code>$bot-&gt;nome_chat</code></td><td>string</td><td>Nome/titolo della chat</td></tr>
+<tr><td><code>$bot-&gt;username_chat</code></td><td>string</td><td>Username della chat</td></tr>
+</table></div>
+
+<h3>Proprieta' Messaggio</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;text</code></td><td>string</td><td>Testo del messaggio</td></tr>
+<tr><td><code>$bot-&gt;message_id</code></td><td>int</td><td>ID del messaggio</td></tr>
+<tr><td><code>$bot-&gt;update_id</code></td><td>int</td><td>ID dell'update</td></tr>
+<tr><td><code>$bot-&gt;time</code></td><td>int</td><td>Timestamp (Unix)</td></tr>
+<tr><td><code>$bot-&gt;edit</code></td><td>bool</td><td>True se il messaggio e' stato modificato</td></tr>
+<tr><td><code>$bot-&gt;entities</code></td><td>array</td><td>Entita' (menzioni, hashtag, URL)</td></tr>
+</table></div>
+
+<h3>Proprieta' Media</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;foto</code></td><td>string</td><td>file_id della foto</td></tr>
+<tr><td><code>$bot-&gt;didascalia</code></td><td>string</td><td>Didascalia</td></tr>
+<tr><td><code>$bot-&gt;file</code></td><td>string</td><td>file_id del documento</td></tr>
+<tr><td><code>$bot-&gt;nome_file</code></td><td>string</td><td>Nome del file</td></tr>
+<tr><td><code>$bot-&gt;tipo_file</code></td><td>string</td><td>Tipo MIME</td></tr>
+<tr><td><code>$bot-&gt;video</code></td><td>string</td><td>file_id del video</td></tr>
+<tr><td><code>$bot-&gt;gif</code></td><td>string</td><td>file_id dell'animazione</td></tr>
+<tr><td><code>$bot-&gt;sticker</code></td><td>string</td><td>file_id dello sticker</td></tr>
+</table></div>
+
+<h3>Proprieta' Callback Query</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;callback_query_id</code></td><td>string</td><td>ID della callback query</td></tr>
+<tr><td><code>$bot-&gt;callback_user_id</code></td><td>int</td><td>Utente che ha cliccato</td></tr>
+<tr><td><code>$bot-&gt;callback_data</code></td><td>string</td><td>Dato del bottone</td></tr>
+<tr><td><code>$bot-&gt;callback_message_id</code></td><td>int</td><td>ID del messaggio</td></tr>
+<tr><td><code>$bot-&gt;callback_chat_id</code></td><td>int</td><td>ID della chat</td></tr>
+<tr><td><code>$bot-&gt;callback_text</code></td><td>string</td><td>Testo del messaggio</td></tr>
+</table></div>
+
+<h3>Proprieta' Inline Query</h3>
+<div class="table-wrap"><table>
+<tr><th>Proprieta'</th><th>Tipo</th><th>Descrizione</th></tr>
+<tr><td><code>$bot-&gt;inline_id</code></td><td>string</td><td>ID della inline query</td></tr>
+<tr><td><code>$bot-&gt;inline_user_id</code></td><td>int</td><td>ID utente</td></tr>
+<tr><td><code>$bot-&gt;inline_query</code></td><td>string</td><td>Testo della query</td></tr>
+<tr><td><code>$bot-&gt;inline_offset</code></td><td>string</td><td>Offset di paginazione</td></tr>
+</table></div>
+
+<p class="mt-sm" style="color:var(--text2)">Per la lista completa di tutte le proprieta' (messaggi inoltrati, risposte, nuovi membri, canali), vedi la <a href="https://github.com/Adriapp/TeleApp/blob/master/README_IT.md#proprieta-del-bot">documentazione completa su GitHub</a>.</p>
+</div>
+</div>
+</section>
+
+<!-- METHODS -->
+<section id="methods">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Available <span>Methods</span></h2>
+
+<h3>Sending Messages</h3>
+<h4>sendMessage()</h4>
+<pre><code>$bot-&gt;sendMessage($user_id, $text, $keyboard, $type, $risposta, $forceReply, $notifica, $parse_mode, $disableWebPagePreview)</code></pre>
+<div class="table-wrap"><table>
+<tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><td><code>$user_id</code></td><td>int</td><td><em>required</em></td><td>Target chat ID</td></tr>
+<tr><td><code>$text</code></td><td>string</td><td><em>required</em></td><td>Message text (HTML/Markdown)</td></tr>
+<tr><td><code>$keyboard</code></td><td>string</td><td>false</td><td>Keyboard JSON</td></tr>
+<tr><td><code>$type</code></td><td>string</td><td>false</td><td><code>'fisica'</code> = reply keyboard, <code>'inline'</code> = inline</td></tr>
+<tr><td><code>$parse_mode</code></td><td>string</td><td>'HTML'</td><td>'HTML' or 'Markdown'</td></tr>
+</table></div>
+
+<h3>Sending Media</h3>
+<pre><code>$bot-&gt;sendPhoto($user_id, $photo, $caption, $keyboard, $type, $file_id)
+$bot-&gt;sendDocument($user_id, $document, $file_id, $caption, $parse_mode)
+$bot-&gt;sendVideo($user_id, $video, $caption)
+$bot-&gt;sendAudio($user_id, $audio, $caption)
+$bot-&gt;sendVoice($user_id, $voice, $caption)
+$bot-&gt;sendAnimation($user_id, $animation, $caption)
+$bot-&gt;sendSticker($user_id, $sticker, ...)
+$bot-&gt;sendMediaGroup($user_id, $album, $caption)</code></pre>
+
+<h3>Editing &amp; Deleting</h3>
+<pre><code>$bot-&gt;editMessageText($user_id, $message_id, $text, $keyboard, $type, $parse_mode)
+$bot-&gt;deleteMessage($user_id, $message_id)
+$bot-&gt;forwardMessage($from_chat_id, $user_id, $message_id)</code></pre>
+
+<h3>Chat Management</h3>
+<pre><code>$bot-&gt;setChatTitle($chat_id, $title)
+$bot-&gt;setChatDescription($chat_id, $description)
+$bot-&gt;getChat($chat_id)
+$bot-&gt;getChatAdministrators($chat_id)
+$bot-&gt;getChatMembersCount($chat_id)
+$bot-&gt;getChatMember($chat_id, $user_id)
+$bot-&gt;leaveChat($chat_id)
+$bot-&gt;sendChatAction($chat_id, $action)</code></pre>
+
+<h3>Member Management</h3>
+<pre><code>$bot-&gt;kickChatMember($chat_id, $user_id, $until_date)
+$bot-&gt;unbanChatMember($chat_id, $user_id)
+$bot-&gt;restrictChatMember($chat_id, $user_id, $perms, $until_date)
+$bot-&gt;promoteChatMember($chat_id, $user_id, $perms)</code></pre>
+
+<h3>Other Methods</h3>
+<pre><code>$bot-&gt;pinChatMessage($chat_id, $message_id)
+$bot-&gt;unpinChatMessage($chat_id, $message_id)
+$bot-&gt;unpinAllChatMessages($chat_id)
+$bot-&gt;answerCallbackQuery($callback_query_id, $text, $show_alert)
+$bot-&gt;gestisciInlineQuery($inlineData, $switchText, $switchParameter, $cacheTime)
+$bot-&gt;exportChatInviteLink($chat_id)
+$bot-&gt;setWebhook($token, $url, $max_connections, $allowed_updates)
+$bot-&gt;getWebhookInfo($token)
+$bot-&gt;deleteWebhook($token)</code></pre>
+
+<p class="mt-sm" style="color:var(--text2)">For full parameter details of every method, see the <a href="https://github.com/Adriapp/TeleApp/blob/master/README.md#methods">complete documentation</a>.</p>
+</div>
+
+<div data-lang="it">
+<h2><span>Metodi</span> Disponibili</h2>
+
+<h3>Invio Messaggi</h3>
+<h4>sendMessage()</h4>
+<pre><code>$bot-&gt;sendMessage($user_id, $text, $keyboard, $type, $risposta, $forceReply, $notifica, $parse_mode, $disableWebPagePreview)</code></pre>
+<div class="table-wrap"><table>
+<tr><th>Parametro</th><th>Tipo</th><th>Default</th><th>Descrizione</th></tr>
+<tr><td><code>$user_id</code></td><td>int</td><td><em>obbligatorio</em></td><td>ID chat destinataria</td></tr>
+<tr><td><code>$text</code></td><td>string</td><td><em>obbligatorio</em></td><td>Testo del messaggio (HTML/Markdown)</td></tr>
+<tr><td><code>$keyboard</code></td><td>string</td><td>false</td><td>JSON tastiera</td></tr>
+<tr><td><code>$type</code></td><td>string</td><td>false</td><td><code>'fisica'</code> = tastiera fisica, <code>'inline'</code> = inline</td></tr>
+<tr><td><code>$parse_mode</code></td><td>string</td><td>'HTML'</td><td>'HTML' o 'Markdown'</td></tr>
+</table></div>
+
+<h3>Invio Media</h3>
+<pre><code>$bot-&gt;sendPhoto($user_id, $photo, $caption, $keyboard, $type, $file_id)
+$bot-&gt;sendDocument($user_id, $document, $file_id, $caption, $parse_mode)
+$bot-&gt;sendVideo($user_id, $video, $caption)
+$bot-&gt;sendAudio($user_id, $audio, $caption)
+$bot-&gt;sendVoice($user_id, $voice, $caption)
+$bot-&gt;sendAnimation($user_id, $animation, $caption)
+$bot-&gt;sendSticker($user_id, $sticker, ...)
+$bot-&gt;sendMediaGroup($user_id, $album, $caption)</code></pre>
+
+<h3>Modifica ed Eliminazione</h3>
+<pre><code>$bot-&gt;editMessageText($user_id, $message_id, $text, $keyboard, $type, $parse_mode)
+$bot-&gt;deleteMessage($user_id, $message_id)
+$bot-&gt;forwardMessage($from_chat_id, $user_id, $message_id)</code></pre>
+
+<h3>Gestione Chat</h3>
+<pre><code>$bot-&gt;setChatTitle($chat_id, $title)
+$bot-&gt;setChatDescription($chat_id, $description)
+$bot-&gt;getChat($chat_id)
+$bot-&gt;getChatAdministrators($chat_id)
+$bot-&gt;getChatMembersCount($chat_id)
+$bot-&gt;getChatMember($chat_id, $user_id)
+$bot-&gt;leaveChat($chat_id)
+$bot-&gt;sendChatAction($chat_id, $action)</code></pre>
+
+<h3>Gestione Membri</h3>
+<pre><code>$bot-&gt;kickChatMember($chat_id, $user_id, $until_date)
+$bot-&gt;unbanChatMember($chat_id, $user_id)
+$bot-&gt;restrictChatMember($chat_id, $user_id, $perms, $until_date)
+$bot-&gt;promoteChatMember($chat_id, $user_id, $perms)</code></pre>
+
+<h3>Altri Metodi</h3>
+<pre><code>$bot-&gt;pinChatMessage($chat_id, $message_id)
+$bot-&gt;unpinChatMessage($chat_id, $message_id)
+$bot-&gt;unpinAllChatMessages($chat_id)
+$bot-&gt;answerCallbackQuery($callback_query_id, $text, $show_alert)
+$bot-&gt;gestisciInlineQuery($inlineData, $switchText, $switchParameter, $cacheTime)
+$bot-&gt;exportChatInviteLink($chat_id)
+$bot-&gt;setWebhook($token, $url, $max_connections, $allowed_updates)
+$bot-&gt;getWebhookInfo($token)
+$bot-&gt;deleteWebhook($token)</code></pre>
+
+<p class="mt-sm" style="color:var(--text2)">Per i dettagli completi di ogni metodo, vedi la <a href="https://github.com/Adriapp/TeleApp/blob/master/README_IT.md#metodi">documentazione completa</a>.</p>
+</div>
+</div>
+</section>
+
+<!-- EXAMPLES -->
+<section id="examples">
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Practical <span>Examples</span></h2>
+
+<h3>Echo Bot</h3>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('YOUR_BOT_TOKEN');
+
+if (isset($bot-&gt;text)) {
+    $bot-&gt;sendMessage($bot-&gt;user_id, $bot-&gt;text);
+}</code></pre>
+
+<h3>Multiple Commands</h3>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('YOUR_BOT_TOKEN');
+
+if ($bot-&gt;text == '/start') {
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Welcome! Use /help for commands.');
+}
+if ($bot-&gt;text == '/help') {
+    $bot-&gt;sendMessage($bot-&gt;user_id,
+        '&lt;b&gt;Commands:&lt;/b&gt;' . PHP_EOL .
+        '/start - Start' . PHP_EOL .
+        '/help - Help' . PHP_EOL .
+        '/info - Info'
+    );
+}
+if ($bot-&gt;text == '/info') {
+    $bot-&gt;sendMessage($bot-&gt;user_id,
+        'Your ID: &lt;code&gt;' . $bot-&gt;user_id . '&lt;/code&gt;' . PHP_EOL .
+        'Name: ' . $bot-&gt;nome
+    );
+}</code></pre>
+
+<h3>Inline Keyboard + Callback</h3>
+<pre><code>// Send inline keyboard
+if ($bot-&gt;text == '/menu') {
+    $kb = '[{"text":"Option 1","callback_data":"opt1"},{"text":"Option 2","callback_data":"opt2"}]';
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Choose:', $kb, 'inline');
+}
+
+// Handle callback
+if (isset($bot-&gt;callback_data)) {
+    $bot-&gt;answerCallbackQuery($bot-&gt;callback_query_id, 'You chose: ' . $bot-&gt;callback_data);
+    $bot-&gt;editMessageText($bot-&gt;callback_chat_id, $bot-&gt;callback_message_id,
+        'Selected: &lt;b&gt;' . $bot-&gt;callback_data . '&lt;/b&gt;');
+}</code></pre>
+
+<h3>Welcome New Members</h3>
+<pre><code>if (isset($bot-&gt;nuovo_membro_id)) {
+    $bot-&gt;sendMessage($bot-&gt;chat_id,
+        'Welcome, &lt;b&gt;' . $bot-&gt;nuovo_membro_nome . '&lt;/b&gt;!');
+}</code></pre>
+
+<h3>Group Moderation</h3>
+<pre><code>// Ban permanently
+$bot-&gt;kickChatMember($bot-&gt;chat_id, $user_id);
+
+// Ban for 24h
+$bot-&gt;kickChatMember($bot-&gt;chat_id, $user_id, time() + 86400);
+
+// Mute user
+$bot-&gt;restrictChatMember($bot-&gt;chat_id, $user_id, ['can_send_messages' =&gt; false]);
+
+// Promote to admin
+$bot-&gt;promoteChatMember($bot-&gt;chat_id, $user_id, [
+    'can_delete_messages' =&gt; true,
+    'can_restrict_members' =&gt; true
+]);</code></pre>
+</div>
+
+<div data-lang="it">
+<h2><span>Esempi</span> Pratici</h2>
+
+<h3>Bot Echo</h3>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('TOKEN_DEL_TUO_BOT');
+
+if (isset($bot-&gt;text)) {
+    $bot-&gt;sendMessage($bot-&gt;user_id, $bot-&gt;text);
+}</code></pre>
+
+<h3>Comandi Multipli</h3>
+<pre><code>&lt;?php
+include 'bot.php';
+$bot = new Bot('TOKEN_DEL_TUO_BOT');
+
+if ($bot-&gt;text == '/start') {
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Benvenuto! Usa /help per i comandi.');
+}
+if ($bot-&gt;text == '/help') {
+    $bot-&gt;sendMessage($bot-&gt;user_id,
+        '&lt;b&gt;Comandi:&lt;/b&gt;' . PHP_EOL .
+        '/start - Avvia' . PHP_EOL .
+        '/help - Aiuto' . PHP_EOL .
+        '/info - Informazioni'
+    );
+}
+if ($bot-&gt;text == '/info') {
+    $bot-&gt;sendMessage($bot-&gt;user_id,
+        'Il tuo ID: &lt;code&gt;' . $bot-&gt;user_id . '&lt;/code&gt;' . PHP_EOL .
+        'Nome: ' . $bot-&gt;nome
+    );
+}</code></pre>
+
+<h3>Tastiera Inline + Callback</h3>
+<pre><code>// Invia tastiera inline
+if ($bot-&gt;text == '/menu') {
+    $kb = '[{"text":"Opzione 1","callback_data":"opt1"},{"text":"Opzione 2","callback_data":"opt2"}]';
+    $bot-&gt;sendMessage($bot-&gt;user_id, 'Scegli:', $kb, 'inline');
+}
+
+// Gestisci callback
+if (isset($bot-&gt;callback_data)) {
+    $bot-&gt;answerCallbackQuery($bot-&gt;callback_query_id, 'Hai scelto: ' . $bot-&gt;callback_data);
+    $bot-&gt;editMessageText($bot-&gt;callback_chat_id, $bot-&gt;callback_message_id,
+        'Selezionato: &lt;b&gt;' . $bot-&gt;callback_data . '&lt;/b&gt;');
+}</code></pre>
+
+<h3>Benvenuto Nuovi Membri</h3>
+<pre><code>if (isset($bot-&gt;nuovo_membro_id)) {
+    $bot-&gt;sendMessage($bot-&gt;chat_id,
+        'Benvenuto, &lt;b&gt;' . $bot-&gt;nuovo_membro_nome . '&lt;/b&gt;!');
+}</code></pre>
+
+<h3>Moderazione Gruppo</h3>
+<pre><code>// Ban permanente
+$bot-&gt;kickChatMember($bot-&gt;chat_id, $user_id);
+
+// Ban per 24 ore
+$bot-&gt;kickChatMember($bot-&gt;chat_id, $user_id, time() + 86400);
+
+// Silenzia utente
+$bot-&gt;restrictChatMember($bot-&gt;chat_id, $user_id, ['can_send_messages' =&gt; false]);
+
+// Promuovi ad admin
+$bot-&gt;promoteChatMember($bot-&gt;chat_id, $user_id, [
+    'can_delete_messages' =&gt; true,
+    'can_restrict_members' =&gt; true
+]);</code></pre>
+</div>
+</div>
+</section>
+
+<!-- V1 vs V2 -->
+<section>
+<div class="container">
+<div data-lang="en" class="visible">
+<h2>Version 1 vs <span>Version 2</span> Methods</h2>
+<p class="mb-sm" style="color:var(--text2)">Some methods have two versions (e.g. sendMessage / sendMessage2):</p>
+<div class="table-wrap"><table>
+<tr><th></th><th>Version 1 (sendMessage)</th><th>Version 2 (sendMessage2)</th></tr>
+<tr><td><strong>How</strong></td><td>HTTP request via cURL, returns response</td><td>Outputs JSON via echo (webhook response)</td></tr>
+<tr><td><strong>Limit</strong></td><td>Can be called multiple times</td><td>Only once per request</td></tr>
+<tr><td><strong>When</strong></td><td>General purpose</td><td>Faster for single-action bots</td></tr>
+</table></div>
+</div>
+<div data-lang="it">
+<h2>Metodi v1 vs <span>v2</span></h2>
+<p class="mb-sm" style="color:var(--text2)">Alcuni metodi hanno due versioni (es. sendMessage / sendMessage2):</p>
+<div class="table-wrap"><table>
+<tr><th></th><th>Versione 1 (sendMessage)</th><th>Versione 2 (sendMessage2)</th></tr>
+<tr><td><strong>Come</strong></td><td>Richiesta HTTP via cURL, restituisce risposta</td><td>Stampa JSON via echo (risposta al webhook)</td></tr>
+<tr><td><strong>Limite</strong></td><td>Chiamabile piu' volte</td><td>Solo una volta per richiesta</td></tr>
+<tr><td><strong>Quando</strong></td><td>Uso generale</td><td>Piu' veloce per bot a singola azione</td></tr>
+</table></div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+<div data-lang="en" class="visible">
+<p><strong>TeleApp</strong> - MIT License &copy; 2019-2026 <a href="https://github.com/Adriapp">Adriapp</a></p>
+<p style="margin-top:8px">Full documentation: <a href="https://github.com/Adriapp/TeleApp/blob/master/README.md">English</a> | <a href="https://github.com/Adriapp/TeleApp/blob/master/README_IT.md">Italiano</a></p>
+</div>
+<div data-lang="it">
+<p><strong>TeleApp</strong> - Licenza MIT &copy; 2019-2026 <a href="https://github.com/Adriapp">Adriapp</a></p>
+<p style="margin-top:8px">Documentazione completa: <a href="https://github.com/Adriapp/TeleApp/blob/master/README.md">English</a> | <a href="https://github.com/Adriapp/TeleApp/blob/master/README_IT.md">Italiano</a></p>
+</div>
+</div>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.querySelectorAll('[data-lang]').forEach(function(el) {
+    el.classList.remove('visible');
+    if (el.getAttribute('data-lang') === lang) {
+      el.classList.add('visible');
+      if (el.tagName === 'A') el.style.display = 'inline-flex';
+      else el.style.display = '';
+    } else {
+      if (el.tagName === 'A' && el.classList.contains('btn')) el.style.display = 'none';
+    }
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+    if (btn.textContent === lang.toUpperCase()) btn.classList.add('active');
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('teleapp-lang', lang);
+}
+(function() {
+  var saved = localStorage.getItem('teleapp-lang');
+  if (saved) setLang(saved);
+  else {
+    var browserLang = navigator.language || navigator.userLanguage || 'en';
+    setLang(browserLang.startsWith('it') ? 'it' : 'en');
+  }
+})();
+</script>
+
+</body>
+</html>
